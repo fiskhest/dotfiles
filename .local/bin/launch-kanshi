@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+CONFIG_FILES="$HOME/.config/kanshi/config $HOME/.config/hypr/hyprland.conf"
+
+pkill kanshi
+kanshi --config "$(echo ${CONFIG_FILES} | awk -F ' ' '{print $1}')" &
+trap "killall kanshi" EXIT
+
+while true; do
+    inotifywait -e create,modify $CONFIG_FILES
+    killall -SIGUSR2 kanshi
+done

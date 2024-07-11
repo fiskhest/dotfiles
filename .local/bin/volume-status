@@ -1,0 +1,6 @@
+#!/bin/sh
+
+pactl set-${1}-mute @DEFAULT_${1^^}@ toggle
+if [ $1 == "sink" ] ; then
+    volume-control mute
+fi

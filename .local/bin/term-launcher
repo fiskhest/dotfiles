@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+## launch foot fullscreen or floating, with or without tmux
+
+set -x
+CONFIG="$HOME/.config/foot/foot.ini"
+
+# ~/.config/hypr/update-env tmux
+# ~/.config/hypr/update-env system
+
+if [ "$1" == "-f" ]; then
+    foot -e bash -c "[ -z $TMUX  ] && { tmux -2 attach -t dropdown || exec tmux -2 new-session -s dropdown && exit ; }"
+elif [ "$1" == "-s" ]; then
+	foot -o window.startup_mode=fullscreen window.padding.x=30 window.padding.y=30 window.opacity=0.95 font.size=9
+elif [ "$1" == "-d"  ]; then
+    foot -e /bin/bash -c "$2"
+else
+    foot -e bash -c "[ -z $TMUX ] && { tmux -2 attach -t root || exec tmux -2 new-session -s root && exit ; }"
+fi

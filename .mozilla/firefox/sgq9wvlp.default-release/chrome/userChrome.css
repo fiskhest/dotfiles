@@ -1,0 +1,128 @@
+#main-window[tabsintitlebar="true"]:not([extradragspace="true"]) #TabsToolbar > .toolbar-items {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#main-window:not([tabsintitlebar="true"]) #TabsToolbar {
+  visibility: collapse !important;
+}
+
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
+  display: none;
+}
+
+#sidebar-box {
+      min-width: 40px !important;
+      max-width: 100px !important;
+  }
+
+tab-item.unread .label-content {
+  font-style: italic;
+}
+
+.label {
+  font-family: DejaVu, sans-serif !important;
+  font-size: 12pt !important;
+}
+
+/* Box for minimize/max/close box. Can't go any higher than 30 or alignment gets weird */
+
+#titlebar-buttonbox {
+  height: var(--titlebar-height) !important;
+}
+
+/* Have to override padding to squeeze min/max/close buttons together */
+
+.titlebar-button {
+  padding-right: var(--titlebar-padding-x) !important;
+  padding-top: var(--titlebar-padding-y) !important;
+  padding-left: var(--titlebar-padding-x) !important;
+  padding-bottom: var(--titlebar-padding-y) !important;
+}
+
+/* Adjust nav bar to take up space where tabs/window buttons were */
+
+#nav-bar {
+  margin-top: var(--navbar-margin-top);
+  margin-right: var(--navbar-margin-right);
+  box-shadow: none !important;
+}
+
+* {
+  font-family: DejaVu, serif !important;
+  font-size: 9pt !important;
+  font-weight: normal !important;
+}
+
+/* exception for badge on adblocker */
+
+.toolbarbutton-badge {
+  font-size: 8px !important;
+}
+
+statuspanel[type="overLink"],
+#statuspanel[type="overLink"] {
+  display: none !important;
+}
+
+/* ---- disabled things ---- */
+
+/*
+[uidensity="compact"]:root #nav-bar {
+    margin-top: -32px;
+}
+*/
+
+/** {font-size: 40px !important;}*/
+
+/* Sidebery */
+
+/*#sidebar-header {
+  display: none;
+}
+
+#TabsToolbar {
+      display: none;
+}*/
+
+/*
+:root {
+    --titlebar-padding-x: 10px;
+    --titlebar-padding-y: 0px;
+    --titlebar-height: 30px;
+    --navbar-margin-top: -25px;
+    --navbar-margin-right: 110px
+
+*/
+
+/*#tabbrowser-tabs, #navigator-toolbox, menuitem, menu {*/
+
+#nav-bar {
+  /* customize this value. */
+  --navbar-margin: -44px;
+
+  margin-top: var(--navbar-margin);
+  margin-bottom: 0;
+  z-index: -100;
+  transition: all 0.3s ease !important;
+  opacity: 0;
+  background-color: rgba(0,0,0,0.8) !important;
+}
+
+#navigator-toolbox:focus-within > #nav-bar,
+#navigator-toolbox:hover > #nav-bar
+{
+  margin-top: 0;
+  margin-bottom: var(--navbar-margin);
+  z-index: 100;
+  opacity: 1;
+}
+
+#main-window[titlepreface^="[1] "] #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] {
+  visibility: collapse !important;
+}
+
+#main-window[titlepreface^="[2] "] #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] {
+  visibility: visible !important;
+  display: flex !important; 
+}

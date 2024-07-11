@@ -1,0 +1,19 @@
+#!/bin/bash
+get_current_brightness() {
+    brightness=$(brightnessctl i | rg --pcre2 -o "\d+(?=%)")
+    echo ${brightness}
+}
+
+if [ "$1" == "inc" ]; then
+    curr_brightness=$(get_current_brightness)
+    brightnessctl s +10%
+fi
+
+if [ "$1" == "dec" ]; then
+    curr_brightness=$(get_current_brightness)
+    brightnessctl s 10%-
+fi
+
+BRIGHTNESS=$(get_current_brightness)
+dunstify -a "changeBrightness" -u low -i video-display -h string:x-dunst-stack-tag:brightness \
+    -h int:value:"$BRIGHTNESS" "Brightness: ${BRIGHTNESS}%"

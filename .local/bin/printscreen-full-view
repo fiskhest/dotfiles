@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -x
+time=`date +%Y-%m-%d-%I-%M-%S`
+geometry=`xrandr | head -n1 | cut -d',' -f2 | tr -d '[:blank:],current'`
+dir="`xdg-user-dir PICTURES`/Screenshots"
+file="Screenshot_${time}_${geometry}.png"
+grimblast copysave active $dir/$file
+viewnior $dir/$file

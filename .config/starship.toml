@@ -1,0 +1,136 @@
+command_timeout = 1000
+format = """
+[](fg:bright-blue bg:#2e3440)\
+$directory\
+$git_branch\
+$git_status\
+$fill\
+$terraform\
+${custom.direnv}\
+$golang\
+$line_break\
+$character\
+${custom.vpn}\
+"""
+
+# $time\
+# $python\
+#[](fg:#3a3a3a bg:#2e3440)\
+#[](fg:#33658A)\
+#[](fg:#FCA17D bg:#33658A)\
+#  
+# $status\
+
+#right_format = """$all"""
+
+# 
+# continuation_prompt = "▶▶"
+
+# Disable the blank line at the start of the prompt
+# add_newline = false
+
+## You can also replace your username with a neat symbol like  to save some space
+#[username]
+#show_always = true
+#style_user = "bg:#9A348E"
+#style_root = "bg:#9A348E"
+#format = '[$user ]($style)'
+
+[directory]
+style = "bg:#5e81ac"
+format = "[](bg:#5e81ac fg:#2e3440)[ $path]($style)[](fg:#5E81AC bg:#2e3440)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+# Here is how you can shorten some long paths by text replacement
+# similar to mapped_locations in Oh My Posh:
+#[directory.substitutions]
+#"Documents" = " "
+#"Downloads" = " "
+#"Music" = " "
+#"Pictures" = " "
+# Keep in mind that the order matters. For example:
+# "Important Documents" = "  "
+# will not be replaced, because "Documents" was already substituted before.
+# So either put "Important Documents" before "Documents" or use the substituted version:
+# "Important  " = "  "
+
+[git_branch]
+symbol = ""  # 
+style = "bg:#81A1C1"
+format = '[](fg:#2E3440 bg:bright-black)[[$symbol $branch](bg:bright-black)]($style)'
+
+[git_status]
+style = "bg:#81A1C1"
+format = '[[($all_status$ahead_behind )](bg:bright-black)]($style)[](fg:bright-black bg:#2E3440)[](fg:#2E3440 bg:dim-black)'
+
+#[](bg:#5e81ac fg:#2e3440)
+#[nodejs]
+#symbol = ""
+#style = "bg:#86BBD8"
+#format = '[[ $symbol ($version)  ](bg:#86BBD8)]($style)'
+#
+#[rust]
+#symbol = ""
+#style = "bg:#86BBD8"
+#format = '[[ $symbol ($version)  ](bg:#86BBD8)]($style)'
+
+[golang]
+symbol = " "
+style = "bg:bright-black"
+# format = '[](fg:#86BBD8)[«${symbol}${version}»]($style)'
+version_format = "${raw}"
+format = "[](fg:bright-black bg:#2E3440)[${symbol}${version}]($style)[](fg:#2E3440 bg:bright-black)"
+
+[time]
+disabled = false
+style = "bg:#33658A"
+#format = '[[ $time  ](bg:#33658A)]($style)'
+format = '[](fg:#33658A bg:#2E3440)[🕙$time ]($style)'
+# format = '[](fg:#2E3440 bg:#86BBD8)[](fg:#33658A bg:#2E3440)[🕙$time ]($style)'
+
+[terraform]
+#format = '[](fg:#86BBD8)[«${symbol}${version}»]($style)'
+format = "[](fg:bright-black bg:#2E3440)[💠$version/$workspace]($style)[](fg:#2E3440 bg:bright-black)"
+version_format = "${raw}"
+style = "bg:bright-black"
+
+[status]
+style = "fg:bright-blue"
+symbol = "🔴 "
+success_symbol = "🟢 SUCCESS"
+format = '[\[$symbol$common_meaning$signal_name$maybe_int\]]($style)'
+map_symbol = true
+disabled = false
+
+[python]
+style = "fg:black bg:#86BBD8"
+symbol = " "
+pyenv_version_name = false
+version_format = "${raw}"
+# format = '[${symbol}($virtualenv)]($style)'
+format = '[](fg:#86BBD8)[ ${pyenv_prefix}(${virtualenv} )(«$version» ${symbol})]($style)'
+
+[package]
+format = '[🎁 $version](208 bold) '
+
+[character]
+vicmd_symbol = "[❮](bold dim-red)"
+success_symbol = "[❯](bold bright-cyan)"
+
+[cmd_duration]
+min_time = 1_000
+format = "[$duration]($style)"
+show_notifications = true
+
+[custom.direnv]
+format = "[«direnv»]($style) "
+style = "fg:yellow dimmed"
+when = "env | grep -E '^DIRENV_FILE='"
+
+[custom.vpn]
+command = '~/.config/starship/scripts/vpn.sh'
+when = "true"
+#style = "bold fg:#6272A4"
+style = "bold fg:red dimmed"
+format = "[($output)]($style) "

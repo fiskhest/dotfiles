@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Format JSON proper;y
+JSON=$(hyprkeys --from-ctl --json | jq -r --slurp "[.[]][0]");
+
+USER_SELECTED=$(echo $JSON | jq -r 'range(0, length) as $i | "\($i) \(.[$i].mods) \(.[$i].key) \(.[$i].dispatcher) \(.[$i].arg)"' | \
+                rofi -dmenu -p 'Keybinds:' \
+                     -theme-str 'window { width: 17%; }' \
+                     -kb-mode-complete "" \
+                     -kb-row-up Up,Alt+k,Control+k,Shift+Tab,Shift+ISO_Left_Tab \
+                     -kb-row-down Down,Alt+j,Control+j \
+                     -kb-accept-entry Control+m,Return,KP_Enter \
+                     -kb-remove-to-eol Control+Shift+e \
+                     -kb-mode-next Shift+Right,Control+Tab,Control+l \
+                     -kb-mode-previous Shift+Left,Control+Shift+Tab,Control+h \
+                     -kb-remove-char-back BackSpace \
+                | awk -F ' ' '{print $1}')
+
+if [ -z "$USER_SELECTED" ]; then
+    exit 0;
+fi
+
+
+#set -x
+#echo $USER_SELECTED
+#echo $JSON | jq -r "[.[]] | .[24]"
+EVENT=$(echo $JSON | jq -r "[.[]] | .[$USER_SELECTED]" | jq -r '"\(.dispatcher) \(.arg)"');
+
+hyprctl dispatch "$EVENT";

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+read input
+ 
+ID=$(dunstify "Control Center" "Copied to clipboard." \
+    --hints string:image-path:xclipboard boolean:transient:true \
+    --timeout 1500 \
+    --printid)
+
+# dunstify -u low --replace=699 -i /usr/share/archcraft/icons/dunst/picture.png "Copied to clipboard."
+if [[ -s $input ]]; then
+    dunstify "Control Center" "Screenshot saved, copied to clipboard." \
+        --hints string:image-path:xclipboard boolean:transient:true \
+        --timeout 1500 \
+        --replace $ID
+    viewnior $input
+else
+    dunstify "Control Center" "Screenshot Deleted." \
+        --hints string:image-path:xclipboard boolean:transient:true \
+        --timeout 1500 \
+        --replace $ID
+fi

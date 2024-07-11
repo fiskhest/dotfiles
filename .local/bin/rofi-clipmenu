@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+source ~/.local/share/go-bin-in-path
+
+# cliphist list | rofi -dmenu \
+#                      -p "📋Search Clip" \
+#                      -kb-mode-complete "" \
+#                      -kb-row-up Up,Alt+k,Control+k,Shift+Tab,Shift+ISO_Left_Tab \
+#                      -kb-row-down Down,Alt+j,Control+j \
+#                      -kb-accept-entry Control+m,Return,KP_Enter \
+#                      -kb-remove-to-eol Control+Shift+e \
+#                      -kb-mode-next Shift+Right,Control+Tab,Control+l \
+#                      -kb-mode-previous Shift+Left,Control+Shift+Tab,Control+h \
+#                      -kb-remove-char-back BackSpace | cliphist decode | wl-copy
+
+#      -font "Iosevka 16" \
+rofi -modi "📋 Search Clip:/home/johan/.local/bin/rofi-cliphist" -show "📋 Search Clip" \
+      -theme-str 'window { width: 50%; }' \
+      -kb-mode-complete "" \
+      -kb-row-up Up,Alt+k,Control+k,Shift+Tab,Shift+ISO_Left_Tab \
+      -kb-row-down Down,Alt+j,Control+j \
+      -kb-accept-entry Control+m,Return,KP_Enter \
+      -kb-remove-to-eol Control+Shift+e \
+      -kb-mode-next Shift+Right,Control+Tab,Control+l \
+      -kb-mode-previous Shift+Left,Control+Shift+Tab,Control+h \
+      -kb-remove-char-back BackSpace

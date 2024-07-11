@@ -1,0 +1,9 @@
+# -*- gitconfig -*-
+[user]
+	email = johan.radivoj@formulate.app
+	name = Johan Radivoj
+# [core]
+# 	hooksPath = ~/.githooks/
+
+[url "ssh://git@github.com/formulatehq/"]
+	insteadOf = https://github.com/formulatehq/

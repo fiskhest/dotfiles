@@ -1,0 +1,6 @@
+search_paths = [
+    '/home/johan/git/',
+    '/home/johan/dev/',
+    '/home/johan/.config',
+]
+default_session = 'root'

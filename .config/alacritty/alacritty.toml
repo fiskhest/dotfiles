@@ -1,0 +1,35 @@
+import = ["/home/johan/.config/alacritty/colors.toml", "/home/johan/.config/alacritty/fonts.toml"]
+live_config_reload = true
+
+[cursor]
+unfocused_hollow = false
+
+[cursor.style]
+blinking = "On"
+shape = "Block"
+
+[debug]
+log_level = "Error"
+
+[env]
+TERM = "xterm-256color"
+WINIT_X11_SCALE_FACTOR = "1.2"
+
+[window]
+decorations = "full"
+dynamic_padding = true
+dynamic_title = true
+opacity = 1.0
+startup_mode = "Maximized"
+
+[scrolling]
+history = 100000
+multiplier = 3
+
+[window.dimensions]
+columns = 82
+lines = 25
+
+[window.padding]
+x = 0
+y = 0

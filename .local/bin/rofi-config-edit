@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+source ~/.local/share/go-bin-in-path
+
+config_files=$(fd --hidden --type file --regex ".*(conf|config|yaml|yml|toml|ini|nix|rc)$" ~/.config)
+config_chosen_file_path=$(printf "$config_files\n" | \
+    rofi -dmenu -no-fixed-num-lines -p Conf: \
+      -theme-str 'window { width: 35%; }' \
+      -i \
+      -kb-mode-complete "" \
+      -kb-row-up Up,Alt+k,Control+k,Shift+Tab,Shift+ISO_Left_Tab \
+      -kb-row-down Down,Alt+j,Control+j \
+      -kb-accept-entry Control+m,Return,KP_Enter \
+      -kb-remove-to-eol Control+Shift+e \
+      -kb-mode-next Shift+Right,Control+Tab,Control+l \
+      -kb-mode-previous Shift+Left,Control+Shift+Tab,Control+h \
+      -kb-remove-char-back BackSpace) # 2>&1 /tmp/log
+
+if [ -n "$config_chosen_file_path" ]; then
+    foot -e zsh -c "emacsclient --create-frame -nw $config_chosen_file_path"
+fi

@@ -1,0 +1,22 @@
+profile {
+        output eDP-1 disable
+        output DP-4 position 0,0 enable
+        exec ln -sf ~/.config/swaylock/config.stationary ~/.config/swaylock/config
+}
+
+profile {
+        output eDP-1 disable
+        output DP-5 position 0,0 enable
+        exec hyprctl keyword general:gaps_in  4
+        exec hyprctl keyword general:gaps_out 12
+        exec launch-waybar
+        exec ln -sf ~/.config/swaylock/config.stationary ~/.config/swaylock/config
+}
+
+profile {
+        output eDP-1 mode 1920x1200@60Hz enable
+        exec hyprctl keyword general:gaps_in  3
+        exec hyprctl keyword general:gaps_out 4
+        exec launch-waybar
+        exec ln -sf ~/.config/swaylock/config.laptop ~/.config/swaylock/config
+}

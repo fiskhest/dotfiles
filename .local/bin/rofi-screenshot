@@ -1,0 +1,85 @@
+#!/usr/bin/sh
+# https://github.com/D4NZ-jpg/rofi-screenshot-wayland/blob/main/rofi-screenshot-wayland.sh
+# https://github.com/FantomeBeignet/rofi-grimshot/blob/master/rofi-grimshot.sh
+
+screenshot_dir="~/pics/screenshots"
+
+# Display a selection menu using dmenu
+get_option() {
+    # Define the prompt and options
+    local prompt="$1"
+    declare -n map=$2
+    local options=("${!map[@]}")
+
+    # Display the options using dmenu or similar and capture the selection
+    local selection=$(printf '%s\n' "${options[@]}" | rofi -dmenu -selected-row 2 -no-fixed-num-lines -font "Iosevka" -theme-str 'window {width: 25%; }' -p "$prompt")
+
+    set -x
+    # Return the value associated with the selection
+    if [ -n "${selection}" ]; then
+        echo "${map[$selection]}"
+    else
+        exit 1
+    fi
+}
+
+# Get user input
+get_input() {
+    local prompt="$1"
+    local default_input="$2"
+
+    echo "$default_input" | rofi -dmenu -no-fixed-num-lines -font "Iosevka" -theme-str 'window {width: 25%; }' -p "$prompt"
+}
+
+declare -A src_types=(
+    ["🌐 All Monitors   - Capture all connected monitors"]="monitors"
+    ["💻 Current Screen - Capture the current screen"]="screen"
+    ["🪟 Current Window - Capture the active window"]="window"
+    ["⬚  Select Region  - Manually select a screen region area"]="region"
+)
+
+# declare -A save_types=(
+#     ["🖼️ Save as PNG - Save the screenshot in PNG format"]="png"
+#     ["📋 Copy to Clipboard - Copy the screenshot to clipboard"]="clipboard"
+# )
+
+src=$(get_option "🖥️ Choose Screenshot Type:" src_types)
+if [ -z "$src" ] ; then
+    exit 1
+fi
+
+delay=$(get_input "🕒 Select Delay for Screenshot (in seconds):" "⚡ No Delay")
+
+if [ -z "$delay" ] ; then
+    exit 1
+fi
+
+# save=$(get_option "💾 Select Save Method:" save_types)
+save="png"
+
+if [[ "$delay" == "⚡ No Delay" ]] then
+    delay="0"
+fi
+
+# Image locations
+# mkdir -p "$screenshot_dir"
+
+# Capture image
+case "$src" in
+    region)
+        grimblast --wait $delay copysave area | notify_view
+        ;;
+    screen)
+        sleep 0.1
+        grimblast --wait $delay copysave output | notify_view
+        ;;
+    window)
+        sleep 0.1
+        grimblast --wait $delay copysave active | notify_view
+        ;;
+    monitors)
+        sleep 0.1
+        grimblast --wait $delay copysave screen | notify_view
+        ;;
+esac
+

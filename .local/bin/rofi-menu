@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source ~/.local/share/go-bin-in-path
+
+rofi -show drun -display-drun "App:" -i -theme-str 'window { width: 20%; }' # -config ~/.config/rofi/config.rasi -dump-config

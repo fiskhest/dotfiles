@@ -1,0 +1,213 @@
+{
+    "layer": "top", // Waybar at top layer
+    "position": "top", // Waybar position (top|bottom|left|right)
+    // "height": 36, // Waybar height (to be removed for auto height)
+    // Archived modules
+    // "custom/cpugovernor", "hyprland/language", "sway/mode", "network"
+    // Choose the order of the modules
+    "modules-left": [ "custom/updates", "clock", "custom/weather", "idle_inhibitor", "hyprland/workspaces"],
+    "modules-center": ["hyprland/window"],
+    "modules-right": [ "cpu", "temperature", "pulseaudio", "bluetooth", "backlight", "battery", "tray"],
+    // Modules configuration
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{name}",
+        "on-scroll-up": "hyprctl dispatch workspace e+1",
+        "on-scroll-down": "hyprctl dispatch workspace e-1"
+    },
+    "hyprland/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+    "hyprland/window": {
+        "format": "{}",
+        "separate-outputs": true,
+        "max-length": 79, 
+        "tooltip": true
+    },
+    "bluetooth": {
+        "interval": 30,
+        "format": "{icon}",
+        "format-connected": "<span color='#A3BE8C'>{icon}</span>",
+        //"format-connected": " {device_alias}",
+        //"format-connected-battery": " {device_alias} {device_battery_percentage}%",
+        // "format-alt": "{status}",
+        "format-icons": {
+            "enabled": "",
+            "disabled": ""
+        },
+        "on-click": "blueman-manager"
+    },    
+    "hyprland/language": {
+        "format": "<big></big> {}",
+        "max-length": 6,
+        "min-length": 6,        
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        },
+        "tooltip": "true"
+    },
+    "tray": {
+        "icon-size": 18,
+        "spacing": 3
+    },
+    "clock": {
+        "format": "  {:%H:%M   %e %b}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "today-format": "<b>{}</b>",
+        "on-click": "gnome-calendar"
+    },
+    "cpu": {
+        "interval": "5",
+        "format": "<span font='Font Awesome 5 Free 11'></span>  {max_frequency}GHz <span color=\"darkgray\">| {usage}%</span>",
+        "max-length": 15,
+        "min-length": 15,
+        "on-click": "alacritty -e zsh -c htop --sort-key PERCENT_CPU",
+        "tooltip": false
+    },
+    "battery": {
+        "format": "<span font='Font Awesome 5 Free 11'>{icon}</span>  <span font='Iosevka'>{capacity}%</span>",
+        "format-icons": ["", "", "", "", ""],
+        "format-time": "{H}:{m}",
+        "format-charging": "<span foreground='#A3BE8C' font='Font Awesome 5 Free'></span> <span foreground='#A3BE8C' font='Font Awesome 5 Free 11'>{icon}</span> <span foreground='#A3BE8C' font='Iosevka Bold'>{capacity}%</span>",
+        "format-normal": "<span font='Font Awesome 5 Free 11'>{icon}  {capacity}%</span>",
+        "format-full": "<span font='Font Awesome 5 Free 11'>{icon}</span> ",
+        "interval": 30,
+        "full-at": 94,
+        "states": {
+            "full": 100,
+            "normal": 90,
+            "warning": 30,
+            "critical":15 
+        },
+        "tooltip": true
+    },
+    "temperature": {
+        //"thermal-zone": 1,
+        "interval": "4",
+        "hwmon-path": "/sys/class/hwmon/hwmon3/temp1_input",
+        "critical-threshold": 90,
+        "format-critical": "  {temperatureC}°C",
+        "format": "<span font='Font Awesome 6 Free'>{icon}</span>  {temperatureC}°C",
+        "format-icons": ["", "", ""],
+        "max-length": 7,
+        "min-length": 7
+    },
+    "network": {
+        // "interface": "wlan0", // (Optional) To force the use of this interface,
+        "format-wifi": "  {essid}",
+        "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
+        "format-linked": "{ifname} (No IP) ",
+        "format-disconnected": "",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "family": "ipv4",
+        "tooltip-format-wifi": "\t\t{ifname} @ {essid}\nIP:\t\t{ipaddr}\nSignal:\t{signalStrength}%\nFreq:\t{frequency}MHz\n {bandwidthUpBits}  {bandwidthDownBits}",
+        "tooltip-format-ethernet": " {ifname}\nIP: {ipaddr}\n {bandwidthUpBits}  {bandwidthDownBits}"
+    },
+    "pulseaudio": {
+        "scroll-step": 2.5, // %, can be a float
+        "format": "<span font='Font Awesome 5 Free 11'>{icon}</span> ",
+        //"format-bluetooth": "<span font='Font Awesome 5 Free 11'>{icon}</span> {volume}%",
+        "format-alt": "<span font='Font Awesome 5 Free 11'>{icon}</span>",
+        "format-alt-click": "click-right",
+        "format-muted": "<span font='Font Awesome 5 Free 11'></span>",
+        // "format": "{icon} {volume}% {format_source}",
+        // "format-bluetooth": "{volume}% {icon} {format_source}",
+        //"format-bluetooth-muted": " {icon} {format_source}",
+        "format-muted": " {format_source}",
+        //"format-source": "{volume}% ",
+        //"format-source-muted": "",
+        "format-source": "",
+        "format-source-muted": "",
+        // "format-icons": {
+        //     "headphone": "",
+        //     "hands-free": "",
+        //     "headset": "",
+        //     "phone": "",
+        //     "portable": "",
+        //     "car": "",
+        //     "default": ["", "", ""]
+        // },
+        "format-icons": {
+            "headphone": [" ", " ", " ", " "],
+            "default": ["", "", "", ""]
+        },
+        "tooltip": true,
+        "tooltip-format": "{volume}%",
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-middle": "pavucontrol",
+        "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+        "on-scroll-up": "~/.local/bin/volume-control inc",
+        "on-scroll-down": "~/.local/bin/volume-control dec"
+    },
+    "custom/updates": {
+        "format": "{} {icon}",
+        "return-type": "json",
+        "format-icons": {
+            "has-updates": "󱍷",
+            "updated": "󰂪"
+        },
+        "exec-if": "which waybar-module-pacman-updates",
+        "exec": "waybar-module-pacman-updates  --interval-seconds 5 --network-interval-seconds 300"
+    },
+    "custom/pacman": {
+        "format": "<big>󰣇</big>  {}",
+        "interval": 3600,                     // every hour
+        "exec": "checkupdates | wc -l",       // # of updates
+        "exec-if": "exit 0",                  // always run; consider advanced run conditions
+        "on-click": "alacritty -e zsh -c 'paru'; pkill -SIGRTMIN+8 waybar", // update system
+        "signal": 8,
+        "max-length": 5,
+        "min-length": 3
+    },
+    "custom/weather": {
+        "format": "{}",
+        "exec": "curl 'https://wttr.in/?format=1' | awk '{print $1, $2}'",
+        "exec-if": "ping wttr.in -c1",
+        "interval": 1800,
+    },
+    "custom/cpugovernor": {
+      "format": "{icon}",
+      "interval": "30",
+      "return-type": "json",
+      "exec": "$HOME/.config/waybar/custom_modules/cpugovernor.sh",
+      "min-length": 2,
+      "max-length": 2,
+        "format-icons": {
+            "perf": "",
+            "sched": ""
+        },
+    },
+    "backlight": {
+        "format": "{icon}",
+        "format-alt": "{icon} {percent}%",
+        "format-alt-click": "click-right",
+        "format-icons": ["󰃟", "󰃟"],
+        "on-scroll-down": "light -A 5",
+        "on-scroll-up": "light -U 5",
+        "tooltip": false
+    }
+}
+
+
+// from https://github.com/luispabon/sway-dotfiles/blob/567fbe65af0f7d748458e540f4e33cd69fc627b9/configs/waybar/config
+//    "custom/powermenu": {
+//        "return-type": "json",
+//        "exec": "~/.config/waybar/modules/powermenu.sh",
+//        "format": "<span font='Font Awesome 5 Free 9'>{icon}</span>  {}",
+//        "format-icons": [""],
+//        "interval": 3600,
+//        "escape": true,
+//        "on-click": "~/sway/scripts/powermenu"
+//    },
+//    "custom/recorder": {
+//		"format": "",
+//		"return-type": "json",
+//		"interval": 4,
+//		"exec": "echo '{\"class\": \"recording\"}'",
+//		"exec-if": "pgrep wf-recorder"
+//	},

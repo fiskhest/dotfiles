@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# set -x
+if [ "$1" == "inc" ]; then
+   amixer -q sset Master 5%+
+fi
+
+if [ "$1" == "dec" ]; then
+   amixer -q sset Master 5%-
+fi
+
+# if [ "$1" == "mute" ]; then
+#    amixer -q sset Master toggle
+# fi
+
+
+AMIXER=$(amixer sget Master)
+# VOLUME=$(echo $AMIXER | grep 'Right:' | awk -F'[][]' '{ print $2 }' | tr -d "%")
+VOLUME=$(echo $AMIXER | grep -Eo '[0-9]{1,3}%' | tr -d "%" | uniq)
+MUTE=$(echo $AMIXER | grep -o '\[off\]' | tail -n 1)
+if [ "$VOLUME" -le 20 ]; then
+    ICON=audio-volume-low
+else if [ "$VOLUME" -le 60 ]; then
+         ICON=audio-volume-medium
+     else 
+         ICON=audio-volume-high
+     fi
+fi
+if [ "$MUTE" == "[off]" ]; then
+    ICON=audio-volume-muted
+    # Show the sound muted notification
+    dunstify -a "changeVolume" -u low -i $ICON -h string:x-dunst-stack-tag:volume "Volume muted"
+else
+    # Show the volume notification
+    dunstify -a "changeVolume" -u low -i $ICON -h string:x-dunst-stack-tag:volume \
+    -h int:value:"$VOLUME" "Volume: ${VOLUME}%"
+fi
+
+
+# NOTI_ID=$(notify-send.py "Volume $VOLUME/100" --expire-time 2000 --hint int:width:200 \
+#                          --hint string:image-path:$ICON boolean:transient:true \
+#                          int:has-percentage:$VOLUME --replaces-process "audio-video-popup" --app-name Volume)

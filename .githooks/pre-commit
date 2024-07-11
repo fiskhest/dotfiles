@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# if commit contains go-code:
+# run go-lint on go code
+STAGED_GO_FILES=$(git diff --cached --name-only | grep ".go$" | grep -v Dockerfile)
+
+if [[ "$STAGED_GO_FILES" = "" ]]; then
+  exit 0
+fi
+
+PASS=true
+
+for FILE in $STAGED_GO_FILES
+do
+  goimports -w $FILE
+
+  golangci-lint run --fast $FILE
+  if [[ $? == 1 ]]; then
+    PASS=false
+  fi
+
+  # go vet $FILE
+  # if [[ $? != 0 ]]; then
+  #   PASS=false
+  # fi
+done
+
+if ! $PASS; then
+  printf "COMMIT FAILED\n"
+  exit 1
+else
+  printf "COMMIT SUCCEEDED\n"
+fi
+
+exit 0
+
+# ---
+# #!/bin/bash
+# 
+# #https://www.lukeshu.com/blog/git-go-pre-commit.html
+# # This would only loop over files that are already staged for commit.
+# #     git diff --cached --numstat |
+# #     while read add del file; do
+# #         …
+# #     done
+# 
+# shopt -s globstar
+# for file in **/*.go; do
+#     tmp="$(mktemp "$file.bak.XXXXXXXXXX")"
+#     mv "$file" "$tmp"
+#     git checkout "$file"
+#     gofmt -w "$file"
+#     git add "$file"
+#     mv "$tmp" "$file"
+# done

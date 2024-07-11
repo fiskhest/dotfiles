@@ -1,0 +1,40 @@
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = auto
+	ui = true
+	pager = true
+
+[url "git@github.com:"]
+	insteadOf = <https://github.com/>
+[url "ssh://git@github.com/googleapis/"]
+	insteadOf = https://github.com/googleapis/
+[url "ssh://git@github.com/grpc-gateway/"]
+	insteadOf = https://github.com/grpc-gateway/
+
+[pull]
+	rebase = true
+[push]
+	autoSetupRemote = true
+[core]
+    excludesfile = ~/.gitignore
+
+[alias]
+	cof = !git for-each-ref --format='%(refname:short)' refs/heads | fzf | xargs git checkout
+[pull]
+	rebase = true
+
+[init]
+	defaultBranch = main
+[safe]
+	directory = /app
+
+[includeIf "hasconfig:remote.*.url:ssh://git@git.radivoj.se:*/**"]
+	path = ~/.config/git/config.radivoj
+[includeIf "hasconfig:remote.*.url:git@git.radivoj.se:*/**"]
+	path = ~/.config/git/config.radivoj
+[includeIf "hasconfig:remote.*.url:ssh://git@github.com/formulatehq/*/**"]
+	path = ~/.config/git/config.relexsolutions
+[includeIf "hasconfig:remote.*.url:git@github.com:formulatehq/**"]
+	path = ~/.config/git/config.relexsolutions

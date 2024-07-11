@@ -1,0 +1,8 @@
+.ssh/aur*
+.ssh/github-formulatehq*
+.ssh/id_*
+.kube/config
+.2fa
+.config/emailproxy.config
+.config/oauth2ms/config.json
+.config/zsh-secrets/*
