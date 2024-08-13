@@ -38,3 +38,7 @@
 	path = ~/.config/git/config.relexsolutions
 [includeIf "hasconfig:remote.*.url:git@github.com:formulatehq/**"]
 	path = ~/.config/git/config.relexsolutions
+[includeIf "hasconfig:remote.*.url:https://github.com/formulatehq/*/**"]
+	path = ~/.config/git/config.relexsolutions
+[includeIf "hasconfig:remote.*.url:github.com:formulatehq/**"]
+	path = ~/.config/git/config.relexsolutions

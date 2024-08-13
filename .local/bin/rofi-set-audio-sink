@@ -1,0 +1,100 @@
+#!/bin/bash
+
+#Script to move every input source to another sink using the PulseAudio command line and Dmenu
+
+# pick an audio output from the list
+list_sinks() {
+    pactl list sinks | grep Description | awk '{$1="";print $0}' | rofi -dmenu -i -p "Sink:" -no-fixed-num-lines -theme-str 'window { width: 15%; }'
+}
+
+# extract the sink index from the pactl list sink result
+get_index(){
+    echo $1 | sed 's/Sink #//'
+}
+
+# return the index of a sink using it's Description
+# we set the sink before it appears first.
+# break when the description of the currently evaluated sinks match the dmenu output
+get_sink_index() {
+    pactl list sinks | while read -r line
+    do
+        if  echo "$line" | grep -q "Sink" ; then
+            sink_value=$(get_index "$line")
+
+        elif echo "$line" | grep -q "$1"; then
+            echo "$sink_value"
+            break
+        fi
+    done
+}
+
+
+# move every audio source and change the default sink
+change_audio_sink(){
+
+    sink_inputs=$(pactl list sink-inputs | grep -Po '(?<=Input #).*')
+
+    pactl set-default-sink "$1"
+    while read -r input; do
+        # move existing stream to inactive sink
+        pactl move-sink-input "$input" "$1"
+    done <<< "$sink_inputs"
+}
+
+choice=$(list_sinks)
+sink_value=$(get_sink_index "$choice")
+change_audio_sink "$sink_value"
+
+#!/bin/sh
+# set -x
+# 
+# # FEATURES
+# # - Doesn't show the sink that is already the default
+# # - Automatically switches all running input sinks when switching the default sink
+# 
+# # Get the current default sink
+# SINK_DEFAULT=$(pactl info | ag "Default Sink" | ag -o "(?!.*:)[^\s].*")
+# # Get the audio sink names
+# SINK_NAMES=$(pactl list sinks | ag Name | cut --complement -c 1-7)
+# 
+# # Get the index of the default sink
+# DEFAULT_INDEX=$(printf "$SINK_NAMES" | ag --number "$SINK_DEFAULT" | sed 's/:.*//' )
+# 
+# # Get the audio sink descriptions
+# SINK_DESCRIPTIONS=$(pactl list sinks | ag Description | cut --complement -c 1-13)
+# # Get all the programs that revieve the audio from the sinks
+# SINK_INPUTS=$(pactl list sink-inputs | ag "Sink Input #")
+# 
+# # Get the descriptions from the sinks without the default sink to display to the user and have the user pick a sink
+# SINK_DESCRIPTION=$(printf "$SINK_DESCRIPTIONS" | sed "${DEFAULT_INDEX}d" | dmenu -i -fn "Roboto Mono for Powerline-11" -p "Select sink:")
+# 
+# # Get the index for the answer that the user wrote
+# DESCRIPTION_INDEX=$(printf "$SINK_DESCRIPTIONS" | ag --number "$SINK_DESCRIPTION" | sed 's/:.*//')
+# DESCRIPTION_INDEX=$(($DESCRIPTION_INDEX - 1)) # Correct the index hihi
+# 
+# # Set the default sink
+# pactl set-default-sink $DESCRIPTION_INDEX
+# 
+# # Change all the ouputs for the programs that are using the default sink
+# printf "$SINK_INPUTS\n" | while read -r SINK_INPUT
+# do
+# 	# Get the index for the program
+# 	SINK_INPUT_INDEX=$(printf "$SINK_INPUT" | ag -o "(?!Sink Input#)[0-9]+")
+# 	pactl move-sink-input $SINK_INPUT_INDEX $DESCRIPTION_INDEX
+# done
+
+#!/usr/bin/env bash
+
+# set -x
+# 
+# analog_profile=output:analog-stereo+input:analog-stereo
+# digital_profile=output:hdmi-stereo+input:analog-stereo
+# 
+# active_profile=$(pacmd list | grep 'active profile')
+# 
+# if [[ ${active_profile} =~ "${analog_profile}" ]] ; then
+#     pacmd set-card-profile 0 ${digital_profile}
+# elif [[ ${active_profile} =~ "${digital_profile}" ]] ; then
+#     pacmd set-card-profile 0 ${analog_profile}
+# fi
+

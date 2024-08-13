@@ -18,8 +18,11 @@
           gh
           fd
           lsd
+          argocd
+          hclfmt
           jq
           kubectx
+          yamllint
           kustomize
           eza
           libreoffice

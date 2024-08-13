@@ -195,7 +195,7 @@ function gcmr() {
 alias k="kubectl"
 alias kctx="kubectx"
 alias kns="kubens"
-alias tf="terraform"
+alias tf="tofu"
 
 # misc
 alias gmv="go mod vendor"
@@ -332,7 +332,8 @@ zstyle ':fzf-tab:complete:*:*' fzf-preview 'less ${(Q)realpath}'
 export LESSOPEN='|~/.lessfilter %s'
 
 export KALEIDOSCOPE_DIR=~/dev/Kaleidoscope
-# export KUBECONFIG=$(find ~/.kube/clusters -type f | sed ':a;N;s/\n/:/;ba')
+# Reload kubeconfig: put config files in ~/.kube/clusters/
+# then run KUBECONFIG=$(find ~/.kube/clusters -type f | sed ':a;N;s/\n/:/;ba') kubectl config view --flatten > ~/.kube/config
 
 export GOPRIVATE="github.com/formulatehq"
 
@@ -358,5 +359,4 @@ complete -o nospace -C /home/johan/go/bin/projectadmin projectadmin
 source '/home/johan/.local/share/pop/shell_init/zsh/init.zsh' # added by pop
 
 source '/home/johan/.config/zsh-secrets/env-vars'
-export POP_PR_LABEL="team:infra"
 export POP_PR_ASSIGNEE="fiskhest"

@@ -336,7 +336,7 @@
     frame_color = "#ff0000"
     timeout = 0
     # Icon for notifications with critical urgency, uncomment to enable
-    default_icon = /home/johan/.local/share/assets//alert.png
+    default_icon = /home/johan/.local/share/assets/icons/alert.png
 
 # Every section that isn't one of the above is interpreted as a rules to
 # override settings for certain messages.
@@ -416,6 +416,11 @@
 [slack]
     appname = "Slack"
     new_icon = /home/johan/.local/share/assets/icons/slack-icon.png
+
+[discord]
+    appname = "discord"
+    new_icon = /home/johan/.local/share/assets/icons/discord.png
+
 #[espeak]
 #    summary = "*"
 #    script = dunst_espeak.sh
