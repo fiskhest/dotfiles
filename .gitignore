@@ -1,0 +1,7 @@
+.DS_Store
+.idea
+*.log
+tmp/
+.config/swaylock/config
+.config/kritarc
+.config/pcmanfm/default/pcmanfm.conf

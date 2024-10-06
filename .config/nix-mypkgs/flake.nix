@@ -9,9 +9,11 @@
         name = "home-packages";
         paths = with pkgs; [
           act
+          actionlint
           aichat
           bat
           cliphist
+          clipse
           bottom
           fzf
           difftastic
@@ -34,6 +36,7 @@
           nnn
           material-icons
           # mdl
+          hyprland-autoname-workspaces
           jira-cli-go
           pass
           postgresql_16
@@ -42,6 +45,8 @@
           fasd
           thefuck
           emacs-lsp-booster
+          #emacs
+          #emacsPackages.mu4e
           cmctl
           shfmt
           shellcheck
@@ -70,6 +75,7 @@
           starship
           tf-summarize
           tenv
+          # tree-sitter
           trivy
           pandoc
           tfautomv

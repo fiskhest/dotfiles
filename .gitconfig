@@ -6,8 +6,8 @@
 	ui = true
 	pager = true
 
-[url "git@github.com:"]
-	insteadOf = <https://github.com/>
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/
 [url "ssh://git@github.com/googleapis/"]
 	insteadOf = https://github.com/googleapis/
 [url "ssh://git@github.com/grpc-gateway/"]
