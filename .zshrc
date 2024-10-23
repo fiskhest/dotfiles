@@ -158,7 +158,6 @@ alias lr='lsd -R'
 alias lg='lsd -l --group-directories-first'
 
 # custom overrides
-alias vi='vim'
 alias cat='bat'
 alias pc="pass -c"
 alias 2fac="2fa -clip"
@@ -171,7 +170,7 @@ alias j='zz'
 alias dir='pwd | tee >(clipcopy)'
 alias ccp='clipcopy'
 alias bazel='bazelisk'
-alias vi='emacsclient -nw'
+alias vi='TERM=xterm-24 emacsclient -nw'
 
 # git
 alias gcl='git clone --depth 1'
@@ -199,7 +198,7 @@ alias tf="tofu"
 
 # misc
 alias gmv="go mod vendor"
-alias magit='emacsclient -nw -a emacs -e "(magit-status \"$(git rev-parse --show-toplevel)\")"'
+alias magit='TERM=xterm-24 emacsclient -nw -a emacs -e "(magit-status \"$(git rev-parse --show-toplevel)\")"'
 alias pass="gopass"
 
 # vi mode
