@@ -17,5 +17,5 @@ config_chosen_file_path=$(printf "$config_files\n" | \
       -kb-remove-char-back BackSpace) # 2>&1 /tmp/log
 
 if [ -n "$config_chosen_file_path" ]; then
-    foot -e zsh -c "emacsclient --create-frame -nw $config_chosen_file_path"
+    foot -e zsh -c "TERM=xterm-24 emacsclient --create-frame -nw $config_chosen_file_path"
 fi

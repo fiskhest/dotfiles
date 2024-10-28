@@ -12,18 +12,20 @@
           actionlint
           aichat
           bat
+          btop
           cliphist
           clipse
-          bottom
           fzf
           difftastic
           gh
+          gron
           fd
           lsd
           argocd
           hclfmt
           jq
           kubectx
+          kubecolor
           yamllint
           kustomize
           eza
@@ -35,7 +37,7 @@
           nerdfonts
           nnn
           material-icons
-          # mdl
+          mdl
           hyprland-autoname-workspaces
           jira-cli-go
           pass
@@ -50,12 +52,13 @@
           cmctl
           shfmt
           shellcheck
+          semgrep
           go-2fa
           gojq
           yadm
           gopass
           gopls
-          #godef
+          godef
           gofumpt
           isync
           helmfile
@@ -75,7 +78,7 @@
           starship
           tf-summarize
           tenv
-          # tree-sitter
+          tree-sitter
           trivy
           pandoc
           tfautomv
