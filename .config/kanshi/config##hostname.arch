@@ -16,9 +16,18 @@ profile {
         exec ln -sf ~/.config/swaylock/config.stationary ~/.config/swaylock/config
 }
 
+profile philips {
+        output eDP-1 disable
+        output "Philips Consumer Electronics Company PHL 328P6A AU01821002827" mode 1920x1080 position 0,0 enable
+        exec hyprctl keyword general:gaps_in  4
+        exec hyprctl keyword general:gaps_out 2
+        exec launch-waybar
+        exec ln -sf ~/.config/swaylock/config.stationary ~/.config/swaylock/config
+}
+
 profile {
         output eDP-1 disable
-        output DP-5 position 0,0 enable
+        output DP-5 mode 3440x1440@120Hz position 0,0 enable
         exec hyprctl keyword general:gaps_in  4
         exec hyprctl keyword general:gaps_out 12
         exec launch-waybar
