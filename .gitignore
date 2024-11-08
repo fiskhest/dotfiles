@@ -3,5 +3,8 @@
 *.log
 tmp/
 .config/swaylock/config
+.config/hypr/hyprland.conf
+.config/hypr/hypridle.conf
+.config/kanshi/config
 .config/kritarc
 .config/pcmanfm/default/pcmanfm.conf
