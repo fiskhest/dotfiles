@@ -86,8 +86,7 @@ input {
         natural_scroll = yes
     }
 
-    sensitivity = 0.0
-    accel_profile = flat
+    sensitivity = 0.4
 }
 
 general {
