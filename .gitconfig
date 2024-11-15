@@ -12,6 +12,8 @@
 	insteadOf = https://github.com/googleapis/
 [url "ssh://git@github.com/grpc-gateway/"]
 	insteadOf = https://github.com/grpc-gateway/
+[url "ssh://git@git.radivoj.se:2227"]
+	insteadOf = https://git.radivoj.se
 
 [pull]
 	rebase = true
@@ -42,3 +44,8 @@
 	path = ~/.config/git/config.relexsolutions
 [includeIf "hasconfig:remote.*.url:github.com:formulatehq/**"]
 	path = ~/.config/git/config.relexsolutions
+[user]
+	name = Johan Radivoj
+	email = johan@radivoj.se
+[credential]
+	helper = cache --timeout=1800
