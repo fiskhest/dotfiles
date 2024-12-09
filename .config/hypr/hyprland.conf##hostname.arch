@@ -278,8 +278,8 @@ bind = $mainMod, V, exec, $rofi || rofi-pass
 bind = $mainMod SHIFT, V, exec, $rofi || $scripts/rofi-2fa-pass
 bind = $mainMod, N, exec, $rofi || $scripts/nmd
 bind = $mainMod, plus, exec, swaylock --fingerprint
-bind = $mainMod, Z, fullscreen, 1
-bind = $mainMod, F, fullscreen, 0
+bind = $mainMod, F, fullscreen, 1
+bind = $mainMod SHIFT, F, fullscreen, 0
 bind = $mainMod, X, exec, wlogout
 bind = , Print, exec, grimblast copysave active | notify_view
 bind = $mainMod, Print, exec, $scripts/recorder
@@ -288,6 +288,7 @@ bind = ALT, Print, exec, $scripts/printscreen-full-view
 bind = $mainMod, U, movetoworkspacesilent, special:minimized
 bind = $mainMod SHIFT, U, togglespecialworkspace, minimized
 bind = $mainMod SHIFT, U, movetoworkspace, +0
+# bind = SUPER, Z, easymotion, action:hyprctl dispatch focuswindow address:{}
 
 # tab app switching
 # bind = ALT, Tab, focuscurrentorlast

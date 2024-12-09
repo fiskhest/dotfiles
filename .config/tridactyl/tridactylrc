@@ -36,7 +36,7 @@ set searchurls.osm https://www.openstreetmap.org/search?query=
 set searchurls.gentoo_wiki https://wiki.gentoo.org/index.php?title=Special%3ASearch&profile=default&fulltext=Search&search=
 set searchurls.qwant https://www.qwant.com/?q=
 set searchurls.argo https://argocd.promo.relexsolutions.com//applications/argocd/
-set searchurls.cf https://relexsolutions.atlassian.net/wiki/search?text=
+set searchurls.cf https://relexsolutions.atlassian.net/wiki/search?spaces=FOR&text=
 set searchurls.jira https://relexsolutions.atlassian.net/issues/?jql=project%20%3D%20RP%20AND%20text%20~%20%22%s%22
 set editorcmd alacritty --class alacritty-float -e zsh -c "emacsclient --reuse-frame -nw %f"
 

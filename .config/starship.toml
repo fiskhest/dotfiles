@@ -5,6 +5,7 @@ $directory\
 $git_branch\
 $git_status\
 $fill\
+$cmd_duration\
 $terraform\
 ${custom.direnv}\
 $golang\
@@ -92,7 +93,7 @@ format = '[](fg:#33658A bg:#2E3440)[🕙$time ]($style)'
 [terraform]
 #format = '[](fg:#86BBD8)[«${symbol}${version}»]($style)'
 format = "[](fg:bright-black bg:#2E3440)[💠$version/$workspace]($style)[](fg:#2E3440 bg:bright-black)"
-version_format = "${raw}"
+version_format = "v${raw}"
 style = "bg:bright-black"
 
 [status]
@@ -119,9 +120,9 @@ vicmd_symbol = "[❮](bold dim-red)"
 success_symbol = "[❯](bold bright-cyan)"
 
 [cmd_duration]
-min_time = 1_000
-format = "[$duration]($style)"
-show_notifications = true
+min_time = 2_000
+format = "took [$duration]($style)"
+show_notifications = false
 
 [custom.direnv]
 format = "[«direnv»]($style) "

@@ -5,6 +5,10 @@
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
     packages."x86_64-linux".default =
       let pkgs = import nixpkgs { system = "x86_64-linux"; config.allowUnfree = true; };
+
+      fonts = {
+        packages = builtins.filter pkgs.lib.isDerivation (builtins.attrValues pkgs.nerd-fonts);
+      };
       in pkgs.buildEnv {
         name = "home-packages";
         paths = with pkgs; [
@@ -34,7 +38,7 @@
           tig
           direnv
           hyperfine
-          nerdfonts
+          fonts.packages
           nnn
           material-icons
           mdl
@@ -76,6 +80,7 @@
           nodePackages.typescript-language-server
           rustup
           starship
+          starpls-bin
           tf-summarize
           tenv
           tree-sitter

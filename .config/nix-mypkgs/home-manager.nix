@@ -6,7 +6,7 @@ let
   maildir = "/home/johan/.mail";
   email = "johan@radivoj.se";
   gmail = "johan.radivoj@gmail.com";
-  workmail = "johan.radivoj@gmail.com";
+  workmail = "johan.radivoj@relexsolutions.com";
   # notmuchrc = "/home/johan/.config/notmuch/notmuchrc";
 in {
   options.modules.shell.mail = {

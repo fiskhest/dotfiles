@@ -145,6 +145,10 @@ rehash_precmd() {
 
 add-zsh-hook -Uz precmd rehash_precmd
 
+WORDCHARS="$WORDCHARS:s:/:" # Each element in path is treated as a word
+WORDCHARS="$WORDCHARS:s:=:" # Split word on =
+WORDCHARS="$WORDCHARS|" # Pipe is treated as word
+
 # omz
 alias zshconfig="subl ~/.zshrc"
 alias ohmyzsh="thunar ~/.oh-my-zsh"
@@ -169,8 +173,17 @@ alias o='a -e xdg-open'
 alias j='zz'
 alias dir='pwd | tee >(clipcopy)'
 alias ccp='clipcopy'
+alias cin='clipcopy'
+alias cout='clippaste'
+
 alias bazel='bazelisk'
 alias vi='TERM=xterm-24 emacsclient -nw'
+
+alias diff='diff --color=auto'
+alias grep='grep --color=auto'
+alias ip='ip --color=auto'
+
+alias nixup='nix flake update --flake ~/.config/nix-mypkgs nixpkgs && nix profile upgrade nix-mypkgs'
 
 # git
 alias gcl='git clone --depth 1'
@@ -195,6 +208,7 @@ alias k="kubectl"
 alias kctx="kubectx"
 alias kns="kubens"
 alias tf="tofu"
+alias pitt="pop infra tf-targets"
 
 # misc
 alias gmv="go mod vendor"
@@ -338,10 +352,6 @@ export GOPRIVATE="github.com/formulatehq"
 
 export DIRENV_LOG_FORMAT=
 
-# replaced in ~/.config/zsh/21-completions.zsh -- what did I mean by that? this config is currently in both files
-autoload -U +X bashcompinit && bashcompinit
-autoload -Uz compinit && compinit
-
 export TERRAGRUNT_NO_AUTO_APPROVE=true
 
 # source ~/.config/environment.d/40-user.conf
@@ -359,3 +369,11 @@ source '/home/johan/.local/share/pop/shell_init/zsh/init.zsh' # added by pop
 
 source '/home/johan/.config/zsh-secrets/env-vars'
 export POP_PR_ASSIGNEE="fiskhest"
+
+TF_CLI_ARGS="-parallelism=50"
+
+source '/home/johan/._argocd'
+
+# replaced in ~/.config/zsh/21-completions.zsh -- what did I mean by that? this config is currently in both files
+autoload -U +X bashcompinit && bashcompinit
+autoload -Uz compinit && compinit

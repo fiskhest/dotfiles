@@ -71,6 +71,8 @@
       persp-emacsclient-init-frame-behaviour-override "main"
 
       lsp-go-use-gofumpt t
+
+      pim-warning-suppress-message-regexps '("semgrep/rulesRefreshed")
       )
 
 ;; hooks
@@ -171,6 +173,8 @@
         message-signature "Johan Radivoj\nSite Reliability Engineer\n+46720832028\n"
         mu4e-completing-read-function 'ivy-completing-read
         mu4e-confirm-quit nil
+        mu4e-headers-include-related nil ;; or P
+        mu4e-headers-show-threads nil
 
         ;; obsolete / seems to have no effect?
         ;; mu4e-show-threads nil ; Instead use "P" to toggle threading
@@ -290,6 +294,7 @@
          ;; make +lookup/documentation write out the entire documentation
          lsp-go-hover-kind "FullDocumentation"
          lsp-disabled-clients '(tfls)
+         lsp-file-watch-threshold 2500
          lsp-semantic-tokens-enable nil
          lsp-semantic-tokens-honor-refresh-requests nil
          lsp-enable-links t
@@ -326,6 +331,55 @@
 
   (advice-add 'lsp--path-is-watchable-directory
               :around #'++lsp--path-is-watchable-directory-a))
+
+(use-package! bazel
+  :commands
+  (bazel-build
+   bazel-find-build-file
+   bazel-show-consuming-rule
+   bazel-test
+   bazel-test-at-point
+   bazel-compile-current-file)
+
+  :hook
+  ((bazel-build-mode
+    bazel-module-mode
+    bazel-starlark-mode
+    bazel-workspace-mode) . lsp-mode)
+
+  :config
+  (map!
+   :leader
+   :prefix "c"
+   (:prefix
+    ("b" . "Bazel")
+    :desc "Build current file" "b" #'bazel-compile-current-file
+    :desc "Build" "B" #'bazel-build
+    :desc "Go to BUILD file for pkg" "p" #'bazel-find-build-file
+    :desc "Go to consuming rule" "r" #'bazel-show-consuming-rule
+    :desc "Test at point" "t" #'bazel-test-at-point
+    :desc "Test" "T" #'bazel-test))
+
+  (setq bazel-buildifier-before-save t)
+
+  (after! lsp-mode
+    (add-to-list 'lsp-language-id-configuration '(bazel-build-mode . "bazel"))
+    (add-to-list 'lsp-language-id-configuration '(bazel-module-mode . "bazel"))
+    (add-to-list 'lsp-language-id-configuration '(bazel-starlark-mode . "bazel"))
+    (add-to-list 'lsp-language-id-configuration '(bazel-workspace-mode . "bazel"))
+    (lsp-register-client
+     (make-lsp-client
+      :new-connection (lsp-stdio-connection
+                       (lambda ()
+                         (list "starpls" "server"
+                               "--experimental_infer_ctx_attributes"
+                               (concat "--bazel_path=" (executable-find "bazelisk")))))
+      :activation-fn (lsp-activate-on "bazel")
+      :environment-fn (lambda ()
+                        ;; Skip calling the `tools/bazel' as
+                        ;; it might be slow and cause problems.
+                        '(("BAZELISK_SKIP_WRAPPER" . "1")))
+      :server-id 'starpls))))
 
 ;; (setq company-minimum-prefix-length 1
 ;;       company-idle-delay 0.0) ;; default is 0.2

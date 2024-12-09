@@ -65,3 +65,5 @@
 
 (package! kubernetes)
 (package! kubernetes-evil)
+
+(package! bazel)
