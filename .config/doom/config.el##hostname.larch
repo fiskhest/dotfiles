@@ -203,7 +203,8 @@
         user-full-name "Johan Radivoj")
   (auth-source-pass-enable))
 
-(setq mu4e-contexts
+(with-eval-after-load 'mu4e
+  (setq mu4e-contexts
       `(,(make-mu4e-context
            :name "gmail"
            :enter-func (lambda ()
@@ -282,7 +283,7 @@
                                 :key ?a)
                        ( :name  "Unread radivoj messages"
                                 :query "maildir:/radivoj/Inbox AND flag:unread AND NOT flag:trashed"
-                                :key ?u)))))))
+                                :key ?u))))))))
 
 
 ;;;; Use gnus article view
