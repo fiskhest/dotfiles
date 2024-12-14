@@ -336,14 +336,8 @@
                     ( smtpmail-smtp-service . 1587 )
                     ( smtpmail-stream-type . 'plain )
 
-                    ( user-full-name . "Johan Radivoj"))
+                    ( user-full-name . "Johan Radivoj")
 
-
-
-                    ; ( auth-sources . '(password-store) )
-                    ; ( auth-source-debug . t )
-                    ; ( auth-source-do-cache . nil )
-                    ; ( mu4e-compose-signature  . "Johan Radivoj" )
                     ( mu4e-maildir-shortcuts  . ((:maildir "/relexsolutions.com/Inbox" :key ?i)))
                     ( mu4e-bookmarks
                       .
@@ -352,7 +346,7 @@
                                 :key ?a)
                        ( :name  "Unread work mails"
                                 :query "maildir:/relexsolutions.com/Inbox AND flag:unread AND NOT flag:trashed"
-                                :key ?u)))))))
+                                :key ?u))))))))
 
 
 ;;;; Use gnus article view
