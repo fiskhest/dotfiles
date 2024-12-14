@@ -167,10 +167,10 @@
                     t)
 
 (set-email-account! "jobb"
-                    '((mu4e-sent-folder       . "/relex/Sent Mail")
-                      (mu4e-drafts-folder     . "/relex/Drafts")
-                      (mu4e-trash-folder      . "/relex/Trash")
-                      (mu4e-refile-folder     . "/relex/All Mail")
+                    '((mu4e-sent-folder       . "/relexsolutions.com/Sent Mail")
+                      (mu4e-drafts-folder     . "/relexsolutions.com/Drafts")
+                      (mu4e-trash-folder      . "/relexsolutions.com/Trash")
+                      (mu4e-refile-folder     . "/relexsolutions.com/All Mail")
                       (smtpmail-smtp-user     . "johan.radivoj@relexsolutions.com"))
                     t)
 
@@ -344,14 +344,14 @@
                     ; ( auth-source-debug . t )
                     ; ( auth-source-do-cache . nil )
                     ; ( mu4e-compose-signature  . "Johan Radivoj" )
-                    ( mu4e-maildir-shortcuts  . ((:maildir "/relex/Inbox" :key ?i)))
+                    ( mu4e-maildir-shortcuts  . ((:maildir "/relexsolutions.com/Inbox" :key ?i)))
                     ( mu4e-bookmarks
                       .
                       (( :name  "All work mails"
-                                :query "maildir:/relex/Inbox"
+                                :query "maildir:/relexsolutions.com/Inbox"
                                 :key ?a)
                        ( :name  "Unread work mails"
-                                :query "maildir:/relex/Inbox AND flag:unread AND NOT flag:trashed"
+                                :query "maildir:/relexsolutions.com/Inbox AND flag:unread AND NOT flag:trashed"
                                 :key ?u)))))))
 
 
