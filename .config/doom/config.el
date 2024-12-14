@@ -1,1 +1,1 @@
-config.el##hostname.larch
+config.el##hostname.arch
