@@ -352,8 +352,7 @@
                                 :key ?a)
                        ( :name  "Unread work mails"
                                 :query "maildir:/relex/Inbox AND flag:unread AND NOT flag:trashed"
-                                :key ?u))))))))
-                                )))
+                                :key ?u)))))))
 
 
 ;;;; Use gnus article view
