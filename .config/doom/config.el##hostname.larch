@@ -271,18 +271,23 @@
                     ( smtpmail-stream-type   . nil )
                     ( send-mail-function . 'smtpmail-send-it )         ; should not be modified
 
+                    ( smtpmail-servers-requiring-authorization . ".*" )
+                    ;;( smtpmail-smtp-server . "127.0.0.1" )
+                    ;;( smtpmail-smtp-service . 1587 )
+                    ( smtpmail-stream-type 'plain )
+
                     ( auth-sources . '(password-store) )
                     ( auth-source-debug . t )
                     ( auth-source-do-cache . nil )
                     ( mu4e-compose-signature  . "Johan Radivoj" )
-                    ( mu4e-maildir-shortcuts  . ((:maildir "/radivoj/Inbox" :key ?i)))
+                    ( mu4e-maildir-shortcuts  . ((:maildir "/radivoj.se/Inbox" :key ?i)))
                     ( mu4e-bookmarks
                       .
                       (( :name  "All radivoj mails"
-                                :query "maildir:/radivoj/Inbox"
+                                :query "maildir:/radivoj.se/Inbox"
                                 :key ?a)
                        ( :name  "Unread radivoj messages"
-                                :query "maildir:/radivoj/Inbox AND flag:unread AND NOT flag:trashed"
+                                :query "maildir:/radivoj.se/Inbox AND flag:unread AND NOT flag:trashed"
                                 :key ?u))))))))
 
 
@@ -355,28 +360,28 @@
 ;; https://www.emacswiki.org/emacs/mu4e --> scroll down to `Integrating with mbsync`
 
 ;;;;; fix wayland clipboard usage
-(use-package select
-  :demand t
-  :custom
-  (save-interprogram-paste-before-kill t)
-  (select-enable-clipboard             t)
-  (selection-coding-system             'utf-8)
-  :init
-  (setq-default wl-copy-process nil)
-  (when (string-prefix-p "wayland" (getenv "WAYLAND_DISPLAY"))
-    (defun wl-copy-handler (text)
-      (setq wl-copy-process (make-process :name "wl-copy"
-                                          :buffer nil
-                                          :command '("wl-copy" "-f" "-n")
-                                          :connection-type 'pipe))
-      (process-send-string wl-copy-process text)
-      (process-send-eof wl-copy-process))
-    (defun wl-paste-handler ()
-      (if (and wl-copy-process (process-live-p wl-copy-process))
-          nil ; should return nil if we're the current paste owner
-        (shell-command-to-string "wl-paste -n | tr -d \r")))
-    (setq interprogram-cut-function 'wl-copy-handler
-          interprogram-paste-function 'wl-paste-handler)))
+;; (use-package select
+;;   :demand t
+;;   :custom
+;;   (save-interprogram-paste-before-kill t)
+;;   (select-enable-clipboard             t)
+;;   (selection-coding-system             'utf-8)
+;;   :init
+;;   (setq-default wl-copy-process nil)
+;;   (when (string-prefix-p "wayland" (getenv "WAYLAND_DISPLAY"))
+;;     (defun wl-copy-handler (text)
+;;       (setq wl-copy-process (make-process :name "wl-copy"
+;;                                           :buffer nil
+;;                                           :command '("wl-copy" "-f" "-n")
+;;                                           :connection-type 'pipe))
+;;       (process-send-string wl-copy-process text)
+;;       (process-send-eof wl-copy-process))
+;;     (defun wl-paste-handler ()
+;;       (if (and wl-copy-process (process-live-p wl-copy-process))
+;;           nil ; should return nil if we're the current paste owner
+;;         (shell-command-to-string "wl-paste -n | tr -d \r")))
+;;     (setq interprogram-cut-function 'wl-copy-handler
+;;           interprogram-paste-function 'wl-paste-handler)))
 
 ;;;;;;; lsp
 (use-package lsp-mode
