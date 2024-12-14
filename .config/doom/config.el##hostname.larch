@@ -1,0 +1,430 @@
+;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+
+;; Place your private configuration here! Remember, you do not need to run 'doom
+;; sync' after modifying this file!
+
+;;
+;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
+;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
+;;
+;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
+;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
+;; refresh your font settings. If Emacs still can't find your font, it likely
+;; wasn't installed correctly. Font issues are rarely Doom issues!
+
+;; Whenever you reconfigure a package, make sure to wrap your config in an
+;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
+;;
+;;   (after! PACKAGE
+;;     (setq x y))
+;;
+;; The exceptions to this rule:
+;;
+;;   - Setting file/directory variables (like `org-directory')
+;;   - Setting variables which explicitly tell you to set them before their
+;;     package is loaded (see 'C-h v VARIABLE' to look up their documentation).
+;;   - Setting doom variables (which start with 'doom-' or '+').
+;;
+;; Here are some additional functions/macros that will help you configure Doom.
+;;
+;; - `load!' for loading external *.el files relative to this one
+;; - `use-package!' for configuring packages
+;; - `after!' for running code after a package has loaded
+;; - `add-load-path!' for adding directories to the `load-path', relative to
+;;   this file. Emacs searches the `load-path' when you load packages with
+;;   `require' or `use-package'.
+;; - `map!' for binding new keys
+;;
+;; To get information about any of these functions/macros, move the cursor over
+;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
+;; This will open documentation for it, including demos of how they are used.
+;; Alternatively, use `C-h o' to look up a symbol (functions, variables, faces,
+;; etc).
+;;
+;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
+;; they are implemented.
+
+;; generic configuration
+(setq user-full-name "Johan Radivoj"
+      user-mail-address "johan@radivoj.se"
+
+      ;; Don't overwrite copied text on paste
+      evil-kill-on-visual-paste nil
+
+      ;; doom visuals
+      doom-font (font-spec :size 16)
+      doom-theme 'doom-nord
+
+      ;; custom org-dir
+      org-directory "~/org/"
+
+      ;; display settings
+      display-line-numbers-type t
+
+      ;; support for custom tags/anchor styles are set here
+      lsp-yaml-custom-tags ["!reference sequence"]
+
+      ;; add go to path
+      exec-path (append exec-path (list (expand-file-name "~/go/bin")))
+
+      ;; emacsclient
+      persp-emacsclient-init-frame-behaviour-override "main"
+
+      lsp-go-use-gofumpt t
+      )
+
+;; hooks
+(add-hook 'term-mode-hook #'eterm-256color-mode)
+(add-hook 'help-mode-hook 'visual-line-mode)
+
+;;;; bindings section
+
+(after! evil
+  (evil-ex-define-cmd "q" 'kill-this-buffer)
+  (evil-ex-define-cmd "wq" 'doom/save-and-kill-buffer))
+
+(map!
+ (:map 'override
+  :v "v" #'er/expand-region
+  :v "V" #'er/contract-region))
+
+(map!
+ :n "C-0" #'doom/reset-font-size
+ :n "C-=" #'doom/reset-font-size
+ :n "C-+" #'text-scale-increase
+ :n "C--" #'text-scale-decrease)
+
+(map! :leader
+      :desc "Search in project"                       "/"       #'+default/search-project
+      :desc "Doom dashboard"                          "b h"     #'+doom-dashboard/open
+      :desc "Discover projects in search path"        "p D"     #'projectile-discover-projects-in-search-path
+      :desc "Copy link to git repo"                   "g l l"   #'git-link
+      :desc "Perform search with deadgrep"            "s g"     #'deadgrep
+      :desc "Smerge choose upper"                     "m u"     #'smerge-keep-upper
+      :desc "Smerge choose lower"                     "m l"     #'smerge-keep-lower
+
+
+      (:prefix-map ("c" . "code")
+       :desc "Avy lens"    "A"   #'lsp-avy-lens)
+
+      :prefix "o"
+      :desc "Kubedoc" "k" #'kubedoc
+      :desc "Kubedoc for context" "K" #'kubedoc-for-context
+      :desc "mu4e" "m" #'mu4e
+      :desc "Undo tree" "u" #'undo-tree-visualize)
+
+;; inspiration on binding syntax https://github.com/doomemacs/doomemacs/blob/5b7d6763f8f899e556c7c5d89556bf39a1c81f64/modules/config/default/%2Bevil-bindings.el
+(map! :map global-map
+      :i "C-<tab>" #'dabbrev-completion
+      :i "C-TAB" #'dabbrev-completion
+      :desc "Copy link to git repo"                   "C-c g l" #'git-link
+      :desc "Perform search with deadgrep"            "C-c s"   #'deadgrep
+      :desc "Switch to workspace"                     "<f12> s" #'+workspace/switch-to
+      :desc "Move to pane on left"                    "M-h"     #'evil-window-left
+      :desc "Move to pane on down"                    "M-j"     #'evil-window-down
+      :desc "Move to pane on up"                      "M-k"     #'evil-window-up
+      :desc "Move to pane on right"                   "M-l"     #'evil-window-right
+      )
+
+(add-to-list '+lookup-provider-url-alist
+             '("Melpa"       "https://melpa.org/#/?q=%s")
+             '("go.dev"      "https://pkg.go.dev/search?q=%s"))
+
+
+;;;; use-package section
+
+(use-package! magit
+  :config
+  (setq! magit-repository-directories
+         '(("~/git" . 3)
+           ("~/src" . 3))))
+
+(use-package! git-link)
+
+(use-package! projectile
+  :config
+  ;; projectile discovery configuration
+  (setq! projectile-enable-caching nil
+         ;;projectile-auto-discover t
+         projectile-project-search-path '(("~/docs" . 3) ("~/git" . 3) ("~/.config" . 2) ("~/dev" . 3))))
+
+;;;;; mail
+(set-email-account! "radivoj"
+                    '((mu4e-sent-folder       . "/radivoj.se/Sent Mail")
+                      (mu4e-drafts-folder     . "/radivoj.se/Drafts")
+                      (mu4e-trash-folder      . "/radivoj.se/Trash")
+                      (mu4e-refile-folder     . "/radivoj.se/All Mail")
+                      (smtpmail-smtp-user     . "johan@radivoj.se"))
+                    t)
+
+
+(set-email-account! "gmail"
+                    '((mu4e-sent-folder       . "/gmail/Sent Mail")
+                      (mu4e-drafts-folder     . "/gmail/Drafts")
+                      (mu4e-trash-folder      . "/gmail/Trash")
+                      (mu4e-refile-folder     . "/gmail/All Mail")
+                      (smtpmail-smtp-user     . "johan.radivoj@gmail.com"))
+                    t)
+
+
+(use-package! mu4e
+  ;; :load-path "/usr/share/emacs/site-lisp/mu4e/"
+  :ensure nil
+  :defer 1
+  :demand t
+  :config
+  ;; (add-to-list 'smtpmail-auth-supported 'xoauth2)
+  (setq mu4e-mu-binary "/usr/bin/mu"
+        ;;mu4e-mu-version "1.12.4"
+        mu4e-get-mail-command "mbsync --all"
+        mu4e-update-interval 300
+        message-signature "Johan Radivoj"
+        mu4e-completing-read-function 'ivy-completing-read
+        mu4e-confirm-quit nil
+
+        ;; obsolete / seems to have no effect?
+        ;; mu4e-show-threads nil ; Instead use "P" to toggle threading
+
+        ;; auth-sources '(password-store)
+        ;; auth-source-debug t
+        ;; auth-source-do-cache nil
+        ;; ;; SMTP settings:
+        ;; send-mail-function 'smtpmail-send-it         ; should not be modified
+
+        ;; smtpmail-smtp-server  "mail.radivoj.se"
+        ;; smtpmail-smtp-service 587
+        ;; smtpmail-stream-type  nil
+        ;; smtpmail-smtp-user    "johan@radivoj.se"
+        ;; smtpmail-servers-requiring-authorization ".*"
+        ;; smtpmail-smtp-server "127.0.0.1"          ; host running SMTP server
+        ;; smtpmail-smtp-service 1587                ; SMTP service port number
+        ;; smtpmail-stream-type 'plain               ; type of SMTP connections to use
+
+        user-full-name "Johan Radivoj")
+  (auth-source-pass-enable))
+
+(setq mu4e-contexts
+      `(,(make-mu4e-context
+           :name "gmail"
+           :enter-func (lambda ()
+                         (mu4e-message "Entering gmail context")
+                         (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                           (revert-buffer)))
+           :leave-func (lambda ()
+                         (mu4e-message "Leaving gmail context")
+                         (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                           (revert-buffer)))
+           :match-func (lambda (msg)
+                         (when msg
+                           (or (mu4e-message-contact-field-matches msg :to "johan.radivoj@gmail.com")
+                               (mu4e-message-contact-field-matches msg :from "johan.radivoj@gmail.com")
+                               (mu4e-message-contact-field-matches msg :cc "johan.radivoj@gmail.com")
+                               (mu4e-message-contact-field-matches msg :bcc "johan.radivoj@gmail.com")
+                               (string-match-p "^/gmail/Inbox" (mu4e-message-field msg :maildir)))))
+           :vars '( ( user-mail-address            . "johan.radivoj@gmail.com" )
+                    ( smtpmail-smtp-user           . "johan.radivoj@gmail.com" )
+                    ( mu4e-compose-signature       . "Johan Radivoj" )
+                    ( smtpmail-smtp-server         . "smtp.gmail.com" )
+                    ( smtpmail-smtp-service        . 587 )
+                    ( mu4e-maildir-shortcuts       . ((:maildir "/gmail/Inbox" :key ?i)))
+                    ( mu4e-bookmarks
+                      .
+                      (( :name  "Unread messages"
+                                :query "maildir:/gmail/Inbox AND flag:unread AND NOT flag:trashed AND NOT outdoorexperten"
+                                :key ?u)
+                       ( :name "Today's messages"
+                               :query "maildir:/gmail/Inbox AND date:today..now"
+                               :key ?t)
+                       ( :name "Last 7 days"
+                               :query "maildir:/gmail/Inbox AND date:7d..now"
+                               :hide-unread t
+                               :key ?w)
+                       ( :name "Deleted"
+                               :query "flag:trashed"
+                               :key ?d)
+                       ( :name "Possibly garbage"
+                               :query "bokio OR outdoorexperten"
+                               :key ?g)))))
+
+         ,(make-mu4e-context
+           :name "radivoj"
+           :enter-func (lambda ()
+                         (mu4e-message "Entering private context")
+                         (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                           (revert-buffer)))
+           :leave-func (lambda ()
+                         (mu4e-message "Leaving private context")
+                         (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                           (revert-buffer)))
+           :match-func (lambda (msg)
+                         (when msg
+                           (or (mu4e-message-contact-field-matches msg :to "johan@radivoj.se")
+                               (mu4e-message-contact-field-matches msg :from "johan@radivoj.se")
+                               (mu4e-message-contact-field-matches msg :cc "johan@radivoj.se")
+                               (mu4e-message-contact-field-matches msg :bcc "johan@radivoj.se"))))
+
+           :vars '( ( user-mail-address      . "johan@radivoj.se" )
+                    ( smtpmail-smtp-user      . "johan@radivoj.se" )
+                    ( smtpmail-smtp-server    . "mail.radivoj.se" )
+                    ( smtpmail-smtp-service   . 587 )
+                    ( smtpmail-stream-type   . nil )
+                    ( send-mail-function . 'smtpmail-send-it )         ; should not be modified
+
+                    ( auth-sources . '(password-store) )
+                    ( auth-source-debug . t )
+                    ( auth-source-do-cache . nil )
+                    ( mu4e-compose-signature  . "Johan Radivoj" )
+                    ( mu4e-maildir-shortcuts  . ((:maildir "/radivoj/Inbox" :key ?i)))
+                    ( mu4e-bookmarks
+                      .
+                      (( :name  "All radivoj mails"
+                                :query "maildir:/radivoj/Inbox"
+                                :key ?a)
+                       ( :name  "Unread radivoj messages"
+                                :query "maildir:/radivoj/Inbox AND flag:unread AND NOT flag:trashed"
+                                :key ?u)))))))
+
+
+;;;; Use gnus article view
+(setq mu4e-view-use-gnus t)
+(use-package! mu4e-icalendar)
+(use-package! mu4e-contrib)
+(mu4e-icalendar-setup)
+
+(add-to-list 'mu4e-view-actions '("view in browser" . mu4e-action-view-in-browser))
+;; (add-hook 'mu4e-view-mode-hook #'visual-line-mode)
+;; (add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
+
+(setq mu4e-html2text-command 'mu4e-shr2text)
+(setq shr-color-visible-luminance-min 60)
+(setq shr-color-visible-distance-min 5)
+(setq shr-use-colors nil)
+(advice-add #'shr-colorize-region :around (defun shr-no-colourise-region (&rest ignore)))
+
+;; https://www.topbug.net/blog/2016/12/09/attachment-reminder-in-emacs-message-mode/
+(defun my-message-current-line-cited-p ()
+  "Indicate whether the line at point is a cited line."
+  (save-match-data
+    (string-match (concat "^" message-cite-prefix-regexp)
+                  (buffer-substring (line-beginning-position) (line-end-position)))))
+
+(defun my-message-says-attachment-p ()
+  "Return t if the message suggests there can be an attachment."
+  (save-excursion
+    (goto-char (point-min))
+    (save-match-data
+      (let (search-result)
+        (while
+            (and (setq search-result (re-search-forward "\\(attach\\|pdf\\|file\\)" nil t))
+                 (my-message-current-line-cited-p)))
+        search-result))))
+
+(defun my-message-has-attachment-p ()
+  "Return t if the message has an attachment."
+  (save-excursion
+    (goto-char (point-min))
+    (save-match-data
+      (re-search-forward "<#part" nil t))))
+
+(defun my-message-pre-send-check-attachment ()
+  (when (and (my-message-says-attachment-p)
+             (not (my-message-has-attachment-p)))
+    (unless
+        (y-or-n-p "The message suggests that you may want to attach something, but no attachment is found. Send anyway?")
+      (error "It seems that an attachment is needed, but none was found. Aborting sending."))))
+(add-hook 'message-send-hook 'my-message-pre-send-check-attachment)
+
+;; filter away the annoying banner that is included in all emails
+(defvar +gnus-remove-banner t)
+
+(defun +gnus-remove-banner ()
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "This email originated from outside of RELEX. Be careful of attachments and links from unknown senders. Report suspicious emails using the\nreport button.\n\n" nil t)
+      (delete-region (point-min) (match-end 0)))))
+
+(add-to-list 'gnus-treatment-function-alist '(+gnus-remove-banner +gnus-remove-banner))
+
+;; git clone git@github.com:krisbalintona/mu4e-send-delay.git
+;; (use-package mu4e-send-delay
+;;   :straight (:type git :host github :repo "krisbalintona/mu4e-send-delay")
+;;   :hook (mu4e-main-mode . mu4e-send-delay-setup)) ; or similar hooks
+
+;; speeding up mbsync/mu4e
+;; https://www.emacswiki.org/emacs/mu4e --> scroll down to `Integrating with mbsync`
+
+;;;;; fix wayland clipboard usage
+(use-package select
+  :demand t
+  :custom
+  (save-interprogram-paste-before-kill t)
+  (select-enable-clipboard             t)
+  (selection-coding-system             'utf-8)
+  :init
+  (setq-default wl-copy-process nil)
+  (when (string-prefix-p "wayland" (getenv "WAYLAND_DISPLAY"))
+    (defun wl-copy-handler (text)
+      (setq wl-copy-process (make-process :name "wl-copy"
+                                          :buffer nil
+                                          :command '("wl-copy" "-f" "-n")
+                                          :connection-type 'pipe))
+      (process-send-string wl-copy-process text)
+      (process-send-eof wl-copy-process))
+    (defun wl-paste-handler ()
+      (if (and wl-copy-process (process-live-p wl-copy-process))
+          nil ; should return nil if we're the current paste owner
+        (shell-command-to-string "wl-paste -n | tr -d \r")))
+    (setq interprogram-cut-function 'wl-copy-handler
+          interprogram-paste-function 'wl-paste-handler)))
+
+;;;;;;; lsp
+(use-package lsp-mode
+  :commands lsp
+  :hook ((terraform-mode . lsp-deferred)
+         (sh-mode . lsp)))
+
+(use-package! lsp-mode
+  :config
+  (setq! lsp-use-plists "true"
+         ;; make +lookup/documentation write out the entire documentation
+         lsp-go-hover-kind "FullDocumentation"
+         lsp-disabled-clients '(tfls)
+         lsp-semantic-tokens-enable nil
+         lsp-semantic-tokens-honor-refresh-requests nil
+         lsp-enable-links t
+         lsp-terraform-ls-prefill-required-fields t
+         lsp-go-gopls-server-args '("-logfile=/tmp/gopls-client.log"
+                                    "-remote.debug=localhost:0"
+                                    ;; "-remote.logfile=/tmp/gopls-daemon.log"
+                                    ;; "-rpc.trace"
+                                    "-remote=auto"))
+
+  (lsp-register-custom-settings
+   '(("gopls.completeUnimported" t t)
+     ("gopls.staticcheck" t t)
+     ("gopls.analyses.nilness" t t)
+     ("gopls.analyses.useany" t t)
+     ("gopls.analyses.unusedparams" t t)
+     ("gopls.analyses.unusedvariable" t t)
+     ("gopls.analyses.unusedwrite" t t)))
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\vendor\\'")
+
+  (defun ++git-ignore-p (path)
+    (let* (; trailing / breaks git check-ignore if path is a symlink:
+           (path (directory-file-name path))
+           (default-directory (file-name-directory path))
+           (relpath (file-name-nondirectory path))
+           (cmd (format "git check-ignore '%s'" relpath))
+           (status (call-process-shell-command cmd)))
+      (eq status 0)))
+
+  (defun ++lsp--path-is-watchable-directory-a
+      (fn path dir ignored-directories)
+    (and (not (++git-ignore-p (f-join dir path)))
+         (funcall fn path dir ignored-directories)))
+
+  (advice-add 'lsp--path-is-watchable-directory
+              :around #'++lsp--path-is-watchable-directory-a))
+
+;; (setq company-minimum-prefix-length 1
+;;       company-idle-delay 0.0) ;; default is 0.2
