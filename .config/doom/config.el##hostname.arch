@@ -183,33 +183,12 @@
   :defer 1
   :demand t
   :config
-  ;; (add-to-list 'smtpmail-auth-supported 'xoauth2)
   (setq mu4e-mu-binary "/usr/bin/mu"
-        ;;mu4e-mu-version "1.12.4"
         mu4e-get-mail-command "mbsync --all"
         mu4e-update-interval 300
         message-signature "Johan Radivoj"
         mu4e-completing-read-function 'ivy-completing-read
         mu4e-confirm-quit nil
-
-        ;; obsolete / seems to have no effect?
-        ;; mu4e-show-threads nil ; Instead use "P" to toggle threading
-
-        ;; auth-sources '(password-store)
-        ;; auth-source-debug t
-        ;; auth-source-do-cache nil
-        ;; ;; SMTP settings:
-        ;; send-mail-function 'smtpmail-send-it         ; should not be modified
-
-        ;; smtpmail-smtp-server  "mail.radivoj.se"
-        ;; smtpmail-smtp-service 587
-        ;; smtpmail-stream-type  nil
-        ;; smtpmail-smtp-user    "johan@radivoj.se"
-        ;; smtpmail-servers-requiring-authorization ".*"
-        ;; smtpmail-smtp-server "127.0.0.1"          ; host running SMTP server
-        ;; smtpmail-smtp-service 1587                ; SMTP service port number
-        ;; smtpmail-stream-type 'plain               ; type of SMTP connections to use
-
         user-full-name "Johan Radivoj")
   (auth-source-pass-enable))
 
@@ -282,8 +261,6 @@
                     ( send-mail-function . 'smtpmail-send-it )         ; should not be modified
 
                     ( smtpmail-servers-requiring-authorization . ".*" )
-                    ;;( smtpmail-smtp-server . "127.0.0.1" )
-                    ;;( smtpmail-smtp-service . 1587 )
                     ( smtpmail-stream-type 'plain )
 
                     ( auth-sources . '(password-store) )
@@ -296,9 +273,20 @@
                       (( :name  "All radivoj mails"
                                 :query "maildir:/radivoj.se/Inbox"
                                 :key ?a)
-                       ( :name  "Unread radivoj messages"
+                       ( :name  "Unread messages"
                                 :query "maildir:/radivoj.se/Inbox AND flag:unread AND NOT flag:trashed"
-                                :key ?u)))))
+                                :key ?u)
+                       ( :name "Todays messages"
+                               :query "maildir:/radivoj.se/Inbox AND date:today..now"
+                               :key ?t)
+                       ( :name "Last 7 days"
+                               :query "maildir:/gmail/Inbox AND date:7d..now"
+                               :hide-unread t
+                               :key ?w)
+                       ( :name "Deleted"
+                               :query "flag:trashed"
+                               :key ?d)))))
+
          ,(make-mu4e-context
            :name "jobb"
            :enter-func (lambda ()
@@ -348,8 +336,17 @@
                                 :key ?a)
                        ( :name  "Unread work mails"
                                 :query "maildir:/relexsolutions.com/Inbox AND flag:unread AND NOT flag:trashed"
-                                :key ?u))))))))
-
+                                :key ?u)
+                       ( :name "Todays work mails"
+                               :query "maildir:/relexsolutions.com/Inbox AND date:today..now"
+                               :key ?t)
+                       ( :name "Last 7 days"
+                               :query "maildir:/relexsolutions.com/Inbox AND date:7d..now"
+                               :hide-unread t
+                               :key ?w)
+                       ( :name "Deleted"
+                               :query "flag:trashed"
+                               :key ?d))))))))
 
 ;;;; Use gnus article view
 (setq mu4e-view-use-gnus t)
