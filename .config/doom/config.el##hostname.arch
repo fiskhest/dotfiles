@@ -71,6 +71,8 @@
       persp-emacsclient-init-frame-behaviour-override "main"
 
       lsp-go-use-gofumpt t
+
+      pim-warning-suppress-message-regexps '("semgrep/rulesRefreshed")
       )
 
 ;; hooks
@@ -453,6 +455,7 @@
          ;; make +lookup/documentation write out the entire documentation
          lsp-go-hover-kind "FullDocumentation"
          lsp-disabled-clients '(tfls)
+         lsp-file-watch-threshold 3000
          lsp-semantic-tokens-enable nil
          lsp-semantic-tokens-honor-refresh-requests nil
          lsp-enable-links t
