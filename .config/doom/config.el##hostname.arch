@@ -168,7 +168,7 @@
                       (smtpmail-smtp-user     . "johan.radivoj@gmail.com"))
                     t)
 
-(set-email-account! "jobb"
+(set-email-account! "work"
                     '((mu4e-sent-folder       . "/relexsolutions.com/Sent Mail")
                       (mu4e-drafts-folder     . "/relexsolutions.com/Drafts")
                       (mu4e-trash-folder      . "/relexsolutions.com/Trash")
@@ -189,7 +189,15 @@
         message-signature "Johan Radivoj"
         mu4e-completing-read-function 'ivy-completing-read
         mu4e-confirm-quit nil
+        mu4e-headers-date-format "%d/%m '%y %H:%M"
+        mu4e-headers-fields
+        '( (:date    .  18)    ;; use :date  / :human-date
+           (:flags   .   6)
+           (:from    .  22)
+           (:subject .  nil)   ;; use :subject / :thread-subject
+           )
         user-full-name "Johan Radivoj")
+
   (auth-source-pass-enable))
 
 (with-eval-after-load 'mu4e
@@ -216,13 +224,16 @@
                     ( mu4e-compose-signature       . "Johan Radivoj" )
                     ( smtpmail-smtp-server         . "smtp.gmail.com" )
                     ( smtpmail-smtp-service        . 587 )
-                    ( mu4e-maildir-shortcuts       . ((:maildir "/gmail/Inbox" :key ?i)))
+                    ;( mu4e-maildir-shortcuts       . ((:maildir "/gmail/Inbox" :key ?i)))
                     ( mu4e-bookmarks
                       .
-                      (( :name  "Unread messages"
-                                :query "maildir:/gmail/Inbox AND flag:unread AND NOT flag:trashed AND NOT outdoorexperten"
-                                :key ?u)
-                       ( :name "Today's messages"
+                      (( :name "All gmail messages"
+                               :query "maildir:/gmail/Inbox"
+                               :key ?a)
+                       ( :name "Unread gmail messages"
+                               :query "maildir:/gmail/Inbox AND flag:unread AND NOT flag:trashed AND NOT outdoorexperten"
+                               :key ?u)
+                       ( :name "Todays gmail messages"
                                :query "maildir:/gmail/Inbox AND date:today..now"
                                :key ?t)
                        ( :name "Last 7 days"
@@ -267,20 +278,20 @@
                     ( auth-source-debug . t )
                     ( auth-source-do-cache . nil )
                     ( mu4e-compose-signature  . "Johan Radivoj" )
-                    ( mu4e-maildir-shortcuts  . ((:maildir "/radivoj.se/Inbox" :key ?i)))
+                    ;( mu4e-maildir-shortcuts  . ((:maildir "/radivoj.se/Inbox" :key ?i)))
                     ( mu4e-bookmarks
                       .
-                      (( :name  "All radivoj mails"
-                                :query "maildir:/radivoj.se/Inbox"
-                                :key ?a)
-                       ( :name  "Unread messages"
-                                :query "maildir:/radivoj.se/Inbox AND flag:unread AND NOT flag:trashed"
-                                :key ?u)
-                       ( :name "Todays messages"
+                      (( :name "All radivoj messages"
+                               :query "maildir:/radivoj.se/Inbox"
+                               :key ?a)
+                       ( :name "Unread radivoj messages"
+                               :query "maildir:/radivoj.se/Inbox AND flag:unread AND NOT flag:trashed"
+                               :key ?u)
+                       ( :name "Todays radivoj messages"
                                :query "maildir:/radivoj.se/Inbox AND date:today..now"
                                :key ?t)
                        ( :name "Last 7 days"
-                               :query "maildir:/gmail/Inbox AND date:7d..now"
+                               :query "maildir:/radivoj.se/Inbox AND date:7d..now"
                                :hide-unread t
                                :key ?w)
                        ( :name "Deleted"
@@ -288,7 +299,7 @@
                                :key ?d)))))
 
          ,(make-mu4e-context
-           :name "jobb"
+           :name "work"
            :enter-func (lambda ()
                          (mu4e-message "Entering work context")
                          (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
@@ -306,10 +317,7 @@
 
            :vars '( ( user-mail-address      . "johan.radivoj@relexsolutions.com" )
                     ( smtpmail-smtp-user      . "johan.radivoj@relexsolutions.com" )
-                    ( mu4e-get-mail-command . "mbsync --all" )
-                    ( mu4e-update-interval . 300 )
                     ( message-signature . "Johan Radivoj\nSite Reliability Engineer\n+46720832028\n" )
-                    ( mu4e-completing-read-function . 'ivy-completing-read )
                     ( mu4e-confirm-quit . nil )
                     ( mu4e-headers-include-related . nil ) ;; or P
                     ( mu4e-headers-show-threads . nil )
@@ -328,16 +336,16 @@
 
                     ( user-full-name . "Johan Radivoj")
 
-                    ( mu4e-maildir-shortcuts  . ((:maildir "/relexsolutions.com/Inbox" :key ?i)))
+                    ;( mu4e-maildir-shortcuts  . ((:maildir "/relexsolutions.com/Inbox" :key ?i)))
                     ( mu4e-bookmarks
                       .
-                      (( :name  "All work mails"
-                                :query "maildir:/relexsolutions.com/Inbox"
-                                :key ?a)
-                       ( :name  "Unread work mails"
-                                :query "maildir:/relexsolutions.com/Inbox AND flag:unread AND NOT flag:trashed"
-                                :key ?u)
-                       ( :name "Todays work mails"
+                      (( :name "All work messages"
+                               :query "maildir:/relexsolutions.com/Inbox"
+                               :key ?a)
+                       ( :name "Unread work messages"
+                               :query "maildir:/relexsolutions.com/Inbox AND flag:unread AND NOT flag:trashed"
+                               :key ?u)
+                       ( :name "Todays work messages"
                                :query "maildir:/relexsolutions.com/Inbox AND date:today..now"
                                :key ?t)
                        ( :name "Last 7 days"
@@ -346,7 +354,10 @@
                                :key ?w)
                        ( :name "Deleted"
                                :query "flag:trashed"
-                               :key ?d))))))))
+                               :key ?d)
+                       ( :name "Git"
+                               :query "maildir:/relexsolutions.com/git"
+                               :key ?g))))))))
 
 ;;;; Use gnus article view
 (setq mu4e-view-use-gnus t)
