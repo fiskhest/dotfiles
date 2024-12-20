@@ -317,7 +317,7 @@
 
            :vars '( ( user-mail-address      . "johan.radivoj@relexsolutions.com" )
                     ( smtpmail-smtp-user      . "johan.radivoj@relexsolutions.com" )
-                    ( message-signature . "Johan Radivoj\nSite Reliability Engineer\n+46720832028\n" )
+                    ( mu4e-compose-signature . "Johan Radivoj\nSite Reliability Engineer\n+46720832028\n" )
                     ( mu4e-confirm-quit . nil )
                     ( mu4e-headers-include-related . nil ) ;; or P
                     ( mu4e-headers-show-threads . nil )
