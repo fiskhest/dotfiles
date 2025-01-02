@@ -89,6 +89,7 @@
           tfautomv
           tflint
           tfswitch
+          tmux-sessionizer
           tmux
           tmuxPlugins.extrakto
           typescript

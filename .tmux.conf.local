@@ -364,8 +364,8 @@ bind-key F12 last-window
 # move status line to top
 #set -g status-position top
 
-bind S display-popup -E "~/.local/bin/tms"
-bind s display-popup -E "~/.local/bin/tms switch"
+bind S display-popup -E "tms"
+bind s display-popup -E "tms switch"
 
 # fast create new window with 3split pane layout named -- need fix to start all new panes with root set to project path
 # bind W command-prompt -p "Window name:" "new-window; splitw -h -p 50; selectp -t 2; splitw -v -p 50 \"/home/johan/.local/bin/load_scratch.sh %%\" ; selectp -t 1"
