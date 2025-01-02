@@ -75,6 +75,11 @@
       pim-warning-suppress-message-regexps '("semgrep/rulesRefreshed")
       )
 
+(setq +format-on-save-disabled-modes
+      '(c-mode
+        cc-mode
+        C/*l))
+
 ;; hooks
 (add-hook 'term-mode-hook #'eterm-256color-mode)
 (add-hook 'help-mode-hook 'visual-line-mode)
