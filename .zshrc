@@ -309,15 +309,24 @@ function n
     fi
 }
 
+function tfsum() {
+  echo "Starting tf summary... Please wait"
+  # If you want to print full plan output: tofu plan $1 -out plan.tfplan
+  tofu plan "$1" -out plan.tfplan 1> /dev/null
+  tofu show -json plan.tfplan | tftools summarize --show-tags
+  # Delete plan out file to avoid git tracking (although is included in .gitignore)
+  if [ -f "plan.tfplan" ]; then rm plan.tfplan; fi
+}
+
+
 # these were enabled before !!
 _evalcache direnv hook zsh
 _evalcache starship init zsh
 _evalcache thefuck --alias
 _evalcache fasd --init auto
-# _evalcache gopass completion zsh
-# _evalcache /usr/bin/s --completion zsh
-# _evalcache /usr/bin/q --completion zsh
 
+# must come after fasd
+alias a="argocd"
 
 # disable sort when completing `git checkout`
 zstyle ':completion:*:git-checkout:*' sort false
@@ -362,18 +371,23 @@ if [[ -n $TMUX ]]; then
   hyprctl()   { _fix_hyprsock_in_tmux; command hyprctl $@; }
 fi
 
-complete -o nospace -C ~/.local/bin/terraform terraform
-
+# autocompletion
 complete -o nospace -C /home/johan/go/bin/projectadmin projectadmin
+complete -o nospace -C /home/johan/go/bin/datamodel datamodel
+complete -o nospace -C /home/johan/.tenv/OpenTofu/1.8.8/tofu tofu
+complete -o nospace -C /home/johan/.tenv/Terraform/1.7.5/terraform terraform
+
 source '/home/johan/.local/share/pop/shell_init/zsh/init.zsh' # added by pop
 
 source '/home/johan/.config/zsh-secrets/env-vars'
 export POP_PR_ASSIGNEE="fiskhest"
 
-TF_CLI_ARGS="-parallelism=50"
+TF_CLI_ARGS_plan="-parallelism=50"
+TF_CLI_ARGS_apply="-parallelism=50"
 
 source '/home/johan/._argocd'
 
 # replaced in ~/.config/zsh/21-completions.zsh -- what did I mean by that? this config is currently in both files
 autoload -U +X bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
+
