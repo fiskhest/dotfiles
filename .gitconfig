@@ -49,3 +49,5 @@
 	email = johan@radivoj.se
 [credential]
 	helper = cache --timeout=1800
+[maintenance]
+	repo = /home/johan/git/formulatehq/ingest
