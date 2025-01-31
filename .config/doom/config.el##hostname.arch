@@ -152,7 +152,7 @@
   ;; projectile discovery configuration
   (setq! projectile-enable-caching nil
          ;;projectile-auto-discover t
-         projectile-project-search-path '(("~/docs" . 3) ("~/git" . 3) ("~/.config" . 2) ("~/dev" . 3))))
+         projectile-project-search-path '(("~/docs" . 3) ("~/git" . 3) ("~/.config" . 3) ("~/dev" . 3))))
 
 ;;;;; mail
 (set-email-account! "radivoj"
