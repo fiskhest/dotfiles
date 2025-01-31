@@ -16,6 +16,7 @@
           actionlint
           aichat
           bat
+          buildifier
           btop
           cliphist
           clipse
@@ -43,12 +44,14 @@
           material-icons
           mdl
           hyprland-autoname-workspaces
+          hyprswitch.packages.x86_64-linux.default
           jira-cli-go
           pass
           postgresql_16
           dust
           bazelisk
           fasd
+          fuzzel
           thefuck
           emacs-lsp-booster
           #emacs
@@ -56,7 +59,6 @@
           cmctl
           shfmt
           shellcheck
-          semgrep
           go-2fa
           gojq
           yadm
@@ -78,6 +80,7 @@
           nodePackages.prettier
           nodePackages.stylelint
           nodePackages.typescript-language-server
+          # rofi-network-manager.packages.x86_64-linux.default
           rustup
           starship
           starpls-bin
@@ -89,6 +92,7 @@
           tfautomv
           tflint
           tfswitch
+          terraform-ls
           tmux-sessionizer
           tmux
           tmuxPlugins.extrakto
