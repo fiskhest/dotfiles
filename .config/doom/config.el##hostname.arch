@@ -1,3 +1,4 @@
+;; -*- emacs-lisp -*-
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
@@ -70,10 +71,8 @@
       ;; emacsclient
       persp-emacsclient-init-frame-behaviour-override "main"
 
-      lsp-go-use-gofumpt t
+      lsp-go-use-gofumpt t)
 
-      pim-warning-suppress-message-regexps '("semgrep/rulesRefreshed")
-      )
 
 (setq +format-on-save-disabled-modes
       '(c-mode
@@ -130,8 +129,8 @@
       :desc "Move to pane on left"                    "M-h"     #'evil-window-left
       :desc "Move to pane on down"                    "M-j"     #'evil-window-down
       :desc "Move to pane on up"                      "M-k"     #'evil-window-up
-      :desc "Move to pane on right"                   "M-l"     #'evil-window-right
-      )
+      :desc "Move to pane on right"                   "M-l"     #'evil-window-right)
+
 
 (add-to-list '+lookup-provider-url-alist
              '("Melpa"       "https://melpa.org/#/?q=%s")
@@ -199,170 +198,170 @@
         '( (:date    .  18)    ;; use :date  / :human-date
            (:flags   .   6)
            (:from    .  22)
-           (:subject .  nil)   ;; use :subject / :thread-subject
-           )
+           (:subject .  nil))   ;; use :subject / :thread-subject
+
         user-full-name "Johan Radivoj")
 
   (auth-source-pass-enable))
 
 (with-eval-after-load 'mu4e
   (setq mu4e-contexts
-      `(,(make-mu4e-context
-           :name "gmail"
-           :enter-func (lambda ()
-                         (mu4e-message "Entering gmail context")
-                         (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
-                           (revert-buffer)))
-           :leave-func (lambda ()
-                         (mu4e-message "Leaving gmail context")
-                         (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
-                           (revert-buffer)))
-           :match-func (lambda (msg)
-                         (when msg
-                           (or (mu4e-message-contact-field-matches msg :to "johan.radivoj@gmail.com")
-                               (mu4e-message-contact-field-matches msg :from "johan.radivoj@gmail.com")
-                               (mu4e-message-contact-field-matches msg :cc "johan.radivoj@gmail.com")
-                               (mu4e-message-contact-field-matches msg :bcc "johan.radivoj@gmail.com")
-                               (string-match-p "^/gmail/Inbox" (mu4e-message-field msg :maildir)))))
-           :vars '( ( user-mail-address            . "johan.radivoj@gmail.com" )
-                    ( smtpmail-smtp-user           . "johan.radivoj@gmail.com" )
-                    ( mu4e-compose-signature       . "Johan Radivoj" )
-                    ( smtpmail-smtp-server         . "smtp.gmail.com" )
-                    ( smtpmail-smtp-service        . 587 )
-                    ;( mu4e-maildir-shortcuts       . ((:maildir "/gmail/Inbox" :key ?i)))
-                    ( mu4e-bookmarks
-                      .
-                      (( :name "All gmail messages"
-                               :query "maildir:/gmail/Inbox"
-                               :key ?a)
-                       ( :name "Unread gmail messages"
-                               :query "maildir:/gmail/Inbox AND flag:unread AND NOT flag:trashed AND NOT outdoorexperten"
-                               :key ?u)
-                       ( :name "Todays gmail messages"
-                               :query "maildir:/gmail/Inbox AND date:today..now"
-                               :key ?t)
-                       ( :name "Last 7 days"
-                               :query "maildir:/gmail/Inbox AND date:7d..now"
-                               :hide-unread t
-                               :key ?w)
-                       ( :name "Deleted"
-                               :query "flag:trashed"
-                               :key ?d)
-                       ( :name "Possibly garbage"
-                               :query "bokio OR outdoorexperten"
-                               :key ?g)))))
+        `(,(make-mu4e-context
+            :name "gmail"
+            :enter-func (lambda ()
+                          (mu4e-message "Entering gmail context")
+                          (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                            (revert-buffer)))
+            :leave-func (lambda ()
+                          (mu4e-message "Leaving gmail context")
+                          (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                            (revert-buffer)))
+            :match-func (lambda (msg)
+                          (when msg
+                            (or (mu4e-message-contact-field-matches msg :to "johan.radivoj@gmail.com")
+                                (mu4e-message-contact-field-matches msg :from "johan.radivoj@gmail.com")
+                                (mu4e-message-contact-field-matches msg :cc "johan.radivoj@gmail.com")
+                                (mu4e-message-contact-field-matches msg :bcc "johan.radivoj@gmail.com")
+                                (string-match-p "^/gmail/Inbox" (mu4e-message-field msg :maildir)))))
+            :vars '( ( user-mail-address            . "johan.radivoj@gmail.com")
+                     ( smtpmail-smtp-user           . "johan.radivoj@gmail.com")
+                     ( mu4e-compose-signature       . "Johan Radivoj")
+                     ( smtpmail-smtp-server         . "smtp.gmail.com")
+                     ( smtpmail-smtp-service        . 587)
+                                        ;( mu4e-maildir-shortcuts       . ((:maildir "/gmail/Inbox" :key ?i)))
+                     ( mu4e-bookmarks
+                       .
+                       (( :name "All gmail messages"
+                                :query "maildir:/gmail/Inbox"
+                                :key ?a)
+                        ( :name "Unread gmail messages"
+                                :query "maildir:/gmail/Inbox AND flag:unread AND NOT flag:trashed AND NOT outdoorexperten"
+                                :key ?u)
+                        ( :name "Todays gmail messages"
+                                :query "maildir:/gmail/Inbox AND date:today..now"
+                                :key ?t)
+                        ( :name "Last 7 days"
+                                :query "maildir:/gmail/Inbox AND date:7d..now"
+                                :hide-unread t
+                                :key ?w)
+                        ( :name "Deleted"
+                                :query "flag:trashed"
+                                :key ?d)
+                        ( :name "Possibly garbage"
+                                :query "bokio OR outdoorexperten"
+                                :key ?g)))))
 
-         ,(make-mu4e-context
-           :name "radivoj"
-           :enter-func (lambda ()
-                         (mu4e-message "Entering private context")
-                         (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
-                           (revert-buffer)))
-           :leave-func (lambda ()
-                         (mu4e-message "Leaving private context")
-                         (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
-                           (revert-buffer)))
-           :match-func (lambda (msg)
-                         (when msg
-                           (or (mu4e-message-contact-field-matches msg :to "johan@radivoj.se")
-                               (mu4e-message-contact-field-matches msg :from "johan@radivoj.se")
-                               (mu4e-message-contact-field-matches msg :cc "johan@radivoj.se")
-                               (mu4e-message-contact-field-matches msg :bcc "johan@radivoj.se"))))
+          ,(make-mu4e-context
+            :name "radivoj"
+            :enter-func (lambda ()
+                          (mu4e-message "Entering private context")
+                          (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                            (revert-buffer)))
+            :leave-func (lambda ()
+                          (mu4e-message "Leaving private context")
+                          (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                            (revert-buffer)))
+            :match-func (lambda (msg)
+                          (when msg
+                            (or (mu4e-message-contact-field-matches msg :to "johan@radivoj.se")
+                                (mu4e-message-contact-field-matches msg :from "johan@radivoj.se")
+                                (mu4e-message-contact-field-matches msg :cc "johan@radivoj.se")
+                                (mu4e-message-contact-field-matches msg :bcc "johan@radivoj.se"))))
 
-           :vars '( ( user-mail-address      . "johan@radivoj.se" )
-                    ( smtpmail-smtp-user      . "johan@radivoj.se" )
-                    ( smtpmail-smtp-server    . "mail.radivoj.se" )
-                    ( smtpmail-smtp-service   . 587 )
-                    ( smtpmail-stream-type   . nil )
-                    ( send-mail-function . 'smtpmail-send-it )         ; should not be modified
+            :vars '( ( user-mail-address      . "johan@radivoj.se")
+                     ( smtpmail-smtp-user      . "johan@radivoj.se")
+                     ( smtpmail-smtp-server    . "mail.radivoj.se")
+                     ( smtpmail-smtp-service   . 587)
+                     ( smtpmail-stream-type   . nil)
+                     ( send-mail-function . 'smtpmail-send-it)         ; should not be modified
 
-                    ( smtpmail-servers-requiring-authorization . ".*" )
-                    ( smtpmail-stream-type 'plain )
+                     ( smtpmail-servers-requiring-authorization . ".*")
+                     ( smtpmail-stream-type 'plain)
 
-                    ( auth-sources . '(password-store) )
-                    ( auth-source-debug . t )
-                    ( auth-source-do-cache . nil )
-                    ( mu4e-compose-signature  . "Johan Radivoj" )
-                    ;( mu4e-maildir-shortcuts  . ((:maildir "/radivoj.se/Inbox" :key ?i)))
-                    ( mu4e-bookmarks
-                      .
-                      (( :name "All radivoj messages"
-                               :query "maildir:/radivoj.se/Inbox"
-                               :key ?a)
-                       ( :name "Unread radivoj messages"
-                               :query "maildir:/radivoj.se/Inbox AND flag:unread AND NOT flag:trashed"
-                               :key ?u)
-                       ( :name "Todays radivoj messages"
-                               :query "maildir:/radivoj.se/Inbox AND date:today..now"
-                               :key ?t)
-                       ( :name "Last 7 days"
-                               :query "maildir:/radivoj.se/Inbox AND date:7d..now"
-                               :hide-unread t
-                               :key ?w)
-                       ( :name "Deleted"
-                               :query "flag:trashed"
-                               :key ?d)))))
+                     ( auth-sources . '(password-store))
+                     ( auth-source-debug . t)
+                     ( auth-source-do-cache . nil)
+                     ( mu4e-compose-signature  . "Johan Radivoj")
+                                        ;( mu4e-maildir-shortcuts  . ((:maildir "/radivoj.se/Inbox" :key ?i)))
+                     ( mu4e-bookmarks
+                       .
+                       (( :name "All radivoj messages"
+                                :query "maildir:/radivoj.se/Inbox"
+                                :key ?a)
+                        ( :name "Unread radivoj messages"
+                                :query "maildir:/radivoj.se/Inbox AND flag:unread AND NOT flag:trashed"
+                                :key ?u)
+                        ( :name "Todays radivoj messages"
+                                :query "maildir:/radivoj.se/Inbox AND date:today..now"
+                                :key ?t)
+                        ( :name "Last 7 days"
+                                :query "maildir:/radivoj.se/Inbox AND date:7d..now"
+                                :hide-unread t
+                                :key ?w)
+                        ( :name "Deleted"
+                                :query "flag:trashed"
+                                :key ?d)))))
 
-         ,(make-mu4e-context
-           :name "work"
-           :enter-func (lambda ()
-                         (mu4e-message "Entering work context")
-                         (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
-                           (revert-buffer)))
-           :leave-func (lambda ()
-                         (mu4e-message "Leaving work context")
-                         (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
-                           (revert-buffer)))
-           :match-func (lambda (msg)
-                         (when msg
-                           (or (mu4e-message-contact-field-matches msg :to "johan.radivoj@relexsolutions.com")
-                               (mu4e-message-contact-field-matches msg :from "johan.radivoj@relexsolutions.com")
-                               (mu4e-message-contact-field-matches msg :cc "johan.radivoj@relexsolutions.com")
-                               (mu4e-message-contact-field-matches msg :bcc "johan.radivoj@relexsolutions.com"))))
+          ,(make-mu4e-context
+            :name "work"
+            :enter-func (lambda ()
+                          (mu4e-message "Entering work context")
+                          (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                            (revert-buffer)))
+            :leave-func (lambda ()
+                          (mu4e-message "Leaving work context")
+                          (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
+                            (revert-buffer)))
+            :match-func (lambda (msg)
+                          (when msg
+                            (or (mu4e-message-contact-field-matches msg :to "johan.radivoj@relexsolutions.com")
+                                (mu4e-message-contact-field-matches msg :from "johan.radivoj@relexsolutions.com")
+                                (mu4e-message-contact-field-matches msg :cc "johan.radivoj@relexsolutions.com")
+                                (mu4e-message-contact-field-matches msg :bcc "johan.radivoj@relexsolutions.com"))))
 
-           :vars '( ( user-mail-address      . "johan.radivoj@relexsolutions.com" )
-                    ( smtpmail-smtp-user      . "johan.radivoj@relexsolutions.com" )
-                    ( mu4e-compose-signature . "Johan Radivoj\nSite Reliability Engineer\n+46720832028\n" )
-                    ( mu4e-confirm-quit . nil )
-                    ( mu4e-headers-include-related . nil ) ;; or P
-                    ( mu4e-headers-show-threads . nil )
+            :vars '( ( user-mail-address      . "johan.radivoj@relexsolutions.com")
+                     ( smtpmail-smtp-user      . "johan.radivoj@relexsolutions.com")
+                     ( mu4e-compose-signature . "Johan Radivoj\nSite Reliability Engineer\n+46720832028\n")
+                     ( mu4e-confirm-quit . nil)
+                     ( mu4e-headers-include-related . nil) ;; or P
+                     ( mu4e-headers-show-threads . nil)
 
-                    ;; obsolete / seems to have no effect?
-                    ;; mu4e-show-threads nil ; Instead use "P" to toggle threading
+                     ;; obsolete / seems to have no effect?
+                     ;; mu4e-show-threads nil ; Instead use "P" to toggle threading
 
-                    ;; SMTP settings:
-                    ( send-mail-function 'smtpmail-send-it )
-                    ( smtpmail-smtp-user "johan.radivoj@relexsolutions.com" )
+                     ;; SMTP settings:
+                     ( send-mail-function 'smtpmail-send-it)
+                     ( smtpmail-smtp-user "johan.radivoj@relexsolutions.com")
 
-                    ( smtpmail-servers-requiring-authorization . ".*" )
-                    ( smtpmail-smtp-server . "127.0.0.1" )
-                    ( smtpmail-smtp-service . 1587 )
-                    ( smtpmail-stream-type . 'plain )
+                     ( smtpmail-servers-requiring-authorization . ".*")
+                     ( smtpmail-smtp-server . "127.0.0.1")
+                     ( smtpmail-smtp-service . 1587)
+                     ( smtpmail-stream-type . 'plain)
 
-                    ( user-full-name . "Johan Radivoj")
+                     ( user-full-name . "Johan Radivoj")
 
-                    ;( mu4e-maildir-shortcuts  . ((:maildir "/relexsolutions.com/Inbox" :key ?i)))
-                    ( mu4e-bookmarks
-                      .
-                      (( :name "All work messages"
-                               :query "maildir:/relexsolutions.com/Inbox"
-                               :key ?a)
-                       ( :name "Unread work messages"
-                               :query "maildir:/relexsolutions.com/Inbox AND flag:unread AND NOT flag:trashed"
-                               :key ?u)
-                       ( :name "Todays work messages"
-                               :query "maildir:/relexsolutions.com/Inbox AND date:today..now"
-                               :key ?t)
-                       ( :name "Last 7 days"
-                               :query "maildir:/relexsolutions.com/Inbox AND date:7d..now"
-                               :hide-unread t
-                               :key ?w)
-                       ( :name "Deleted"
-                               :query "flag:trashed"
-                               :key ?d)
-                       ( :name "Git"
-                               :query "maildir:/relexsolutions.com/git"
-                               :key ?g))))))))
+                                        ;( mu4e-maildir-shortcuts  . ((:maildir "/relexsolutions.com/Inbox" :key ?i)))
+                     ( mu4e-bookmarks
+                       .
+                       (( :name "All work messages"
+                                :query "maildir:/relexsolutions.com/Inbox"
+                                :key ?a)
+                        ( :name "Unread work messages"
+                                :query "maildir:/relexsolutions.com/Inbox AND flag:unread AND NOT flag:trashed"
+                                :key ?u)
+                        ( :name "Todays work messages"
+                                :query "maildir:/relexsolutions.com/Inbox AND date:today..now"
+                                :key ?t)
+                        ( :name "Last 7 days"
+                                :query "maildir:/relexsolutions.com/Inbox AND date:7d..now"
+                                :hide-unread t
+                                :key ?w)
+                        ( :name "Deleted"
+                                :query "flag:trashed"
+                                :key ?d)
+                        ( :name "Git"
+                                :query "maildir:/relexsolutions.com/git"
+                                :key ?g))))))))
 
 ;;;; Use gnus article view
 (setq mu4e-view-use-gnus t)
@@ -424,43 +423,35 @@
 
 (add-to-list 'gnus-treatment-function-alist '(+gnus-remove-banner +gnus-remove-banner))
 
-;; git clone git@github.com:krisbalintona/mu4e-send-delay.git
-;; (use-package mu4e-send-delay
-;;   :straight (:type git :host github :repo "krisbalintona/mu4e-send-delay")
-;;   :hook (mu4e-main-mode . mu4e-send-delay-setup)) ; or similar hooks
-
 ;; speeding up mbsync/mu4e
 ;; https://www.emacswiki.org/emacs/mu4e --> scroll down to `Integrating with mbsync`
 
+;; I believe this can be removed with the most recent hyprland changes
 ;;;;; fix wayland clipboard usage
-;; (use-package select
-;;   :demand t
-;;   :custom
-;;   (save-interprogram-paste-before-kill t)
-;;   (select-enable-clipboard             t)
-;;   (selection-coding-system             'utf-8)
-;;   :init
-;;   (setq-default wl-copy-process nil)
-;;   (when (string-prefix-p "wayland" (getenv "WAYLAND_DISPLAY"))
-;;     (defun wl-copy-handler (text)
-;;       (setq wl-copy-process (make-process :name "wl-copy"
-;;                                           :buffer nil
-;;                                           :command '("wl-copy" "-f" "-n")
-;;                                           :connection-type 'pipe))
-;;       (process-send-string wl-copy-process text)
-;;       (process-send-eof wl-copy-process))
-;;     (defun wl-paste-handler ()
-;;       (if (and wl-copy-process (process-live-p wl-copy-process))
-;;           nil ; should return nil if we're the current paste owner
-;;         (shell-command-to-string "wl-paste -n | tr -d \r")))
-;;     (setq interprogram-cut-function 'wl-copy-handler
-;;           interprogram-paste-function 'wl-paste-handler)))
+(use-package select
+  :demand t
+  :custom
+  (save-interprogram-paste-before-kill t)
+  (select-enable-clipboard             t)
+  (selection-coding-system             'utf-8)
+  :init
+  (setq-default wl-copy-process nil)
+  (when (string-prefix-p "wayland" (getenv "WAYLAND_DISPLAY"))
+    (defun wl-copy-handler (text)
+      (setq wl-copy-process (make-process :name "wl-copy"
+                                          :buffer nil
+                                          :command '("wl-copy" "-f" "-n")
+                                          :connection-type 'pipe))
+      (process-send-string wl-copy-process text)
+      (process-send-eof wl-copy-process))
+    (defun wl-paste-handler ()
+      (if (and wl-copy-process (process-live-p wl-copy-process))
+          nil ; should return nil if we're the current paste owner
+        (shell-command-to-string "wl-paste -n | tr -d \r")))
+    (setq interprogram-cut-function 'wl-copy-handler
+          interprogram-paste-function 'wl-paste-handler)))
 
-;;;;;;; lsp
-(use-package lsp-mode
-  :commands lsp
-  :hook ((terraform-mode . lsp-deferred)
-         (sh-mode . lsp)))
+(setenv "TENV_DETACHED_PROXY" "false")
 
 (use-package! lsp-mode
   :config
@@ -468,11 +459,18 @@
          ;; make +lookup/documentation write out the entire documentation
          lsp-go-hover-kind "FullDocumentation"
          lsp-disabled-clients '(tfls)
-         lsp-file-watch-threshold 3000
+         lsp-file-watch-threshold 2500
          lsp-semantic-tokens-enable nil
          lsp-semantic-tokens-honor-refresh-requests nil
          lsp-enable-links t
+         lsp-elixir-server-command '("elixir-ls")
          lsp-terraform-ls-prefill-required-fields t
+         lsp-go-analyses '((fillreturns . t)
+                           (nilness . t)
+                           (unusedparams . t)
+                           (unusedvariable . t)
+                           (unusedwrite . t)
+                           (useany . t))
          lsp-go-gopls-server-args '("-logfile=/tmp/gopls-client.log"
                                     "-remote.debug=localhost:0"
                                     ;; "-remote.logfile=/tmp/gopls-daemon.log"
@@ -481,13 +479,41 @@
 
   (lsp-register-custom-settings
    '(("gopls.completeUnimported" t t)
-     ("gopls.staticcheck" t t)
-     ("gopls.analyses.nilness" t t)
-     ("gopls.analyses.useany" t t)
-     ("gopls.analyses.unusedparams" t t)
-     ("gopls.analyses.unusedvariable" t t)
-     ("gopls.analyses.unusedwrite" t t)))
+     ("gopls.staticcheck" t t)))
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\vendor\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.terraform\\'")
+
+  ;; LSP Booster
+  ;; https://github.com/blahgeek/emacs-lsp-booster
+  (defun lsp-booster--advice-json-parse (old-fn &rest args)
+    "Try to parse bytecode instead of json."
+    (or
+     (when (equal (following-char) ?#)
+       (let ((bytecode (read (current-buffer))))
+         (when (byte-code-function-p bytecode)
+           (funcall bytecode))))
+     (apply old-fn args)))
+  (advice-add (if (progn (require 'json)
+                         (fboundp 'json-parse-buffer))
+                  'json-parse-buffer
+                'json-read)
+              :around
+              #'lsp-booster--advice-json-parse)
+
+  (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+    "Prepend emacs-lsp-booster command to lsp CMD."
+    (let ((orig-result (funcall old-fn cmd test?)))
+      (if (and (not test?)                             ;; for check lsp-server-present?
+               (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+               lsp-use-plists
+               (not (functionp 'json-rpc-connection))  ;; native json-rpc
+               (executable-find "emacs-lsp-booster"))
+          (progn
+            (message "Using emacs-lsp-booster for %s!" orig-result)
+            (cons "emacs-lsp-booster" orig-result))
+        orig-result)))
+  (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
+
 
   (defun ++git-ignore-p (path)
     (let* (; trailing / breaks git check-ignore if path is a symlink:
@@ -496,24 +522,17 @@
            (relpath (file-name-nondirectory path))
            (cmd (format "git check-ignore '%s'" relpath))
            (status (call-process-shell-command cmd)))
-      (eq status 0)))
-
-  (defun ++lsp--path-is-watchable-directory-a
-      (fn path dir ignored-directories)
-    (and (not (++git-ignore-p (f-join dir path)))
-         (funcall fn path dir ignored-directories)))
-
-  (advice-add 'lsp--path-is-watchable-directory
-              :around #'++lsp--path-is-watchable-directory-a))
+      (eq status 0))))
 
 (use-package! bazel
   :commands
   (bazel-build
+   bazel-compile-current-file
    bazel-find-build-file
+   bazel-run
    bazel-show-consuming-rule
    bazel-test
-   bazel-test-at-point
-   bazel-compile-current-file)
+   bazel-test-at-point)
 
   :hook
   ((bazel-build-mode
@@ -530,11 +549,15 @@
     :desc "Build current file" "b" #'bazel-compile-current-file
     :desc "Build" "B" #'bazel-build
     :desc "Go to BUILD file for pkg" "p" #'bazel-find-build-file
-    :desc "Go to consuming rule" "r" #'bazel-show-consuming-rule
+    :desc "Run" "r" #'bazel-run
+    :desc "Go to consuming rule" "R" #'bazel-show-consuming-rule
     :desc "Test at point" "t" #'bazel-test-at-point
     :desc "Test" "T" #'bazel-test))
 
-  (setq bazel-buildifier-before-save t)
+  (set-formatter! 'buildifier-build '("buildifier" "-type" "build") :modes '(bazel-build-mode))
+  (set-formatter! 'buildifier-bzl '("buildifier" "-type" "bzl") :modes '(bazel-starlark-mode))
+  (set-formatter! 'buildifier-module '("buildifier" "-type" "module") :modes '(bazel-module-mode))
+  (set-formatter! 'buildifier-workspace '("buildifier" "-type" "workspace") :modes '(bazel-workspace-mode))
 
   (after! lsp-mode
     (add-to-list 'lsp-language-id-configuration '(bazel-build-mode . "bazel"))
@@ -546,7 +569,9 @@
       :new-connection (lsp-stdio-connection
                        (lambda ()
                          (list "starpls" "server"
+                               "--experimental_enable_label_completions"
                                "--experimental_infer_ctx_attributes"
+                               "--experimental_use_code_flow_analysis"
                                (concat "--bazel_path=" (executable-find "bazelisk")))))
       :activation-fn (lsp-activate-on "bazel")
       :environment-fn (lambda ()
