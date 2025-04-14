@@ -422,7 +422,7 @@
 (defun +gnus-remove-banner ()
   (save-excursion
     (goto-char (point-min))
-    (while (re-search-forward "This email originated from outside of RELEX. Be careful of attachments and links from unknown senders. Report suspicious emails using the\nreport button.\n\n" nil t)
+    (while (re-search-forward "This email originated from outside of RELEX. Be careful of attachments and links from unknown senders.\nReport suspicious emails using the report button.\n\n" nil t)
       (delete-region (point-min) (match-end 0)))))
 
 (add-to-list 'gnus-treatment-function-alist '(+gnus-remove-banner +gnus-remove-banner))
