@@ -154,8 +154,9 @@
   :config
   ;; projectile discovery configuration
   (setq! projectile-enable-caching nil
-         ;;projectile-auto-discover t
-         projectile-project-search-path '(("~/docs" . 3) ("~/git" . 3) ("~/.config" . 3) ("~/dev" . 3))))
+         projectile-project-search-path '(("~/docs" . 3) ("~/git" . 3) ("~/.config" . 3) ("~/dev" . 3)))
+  (run-with-idle-timer 300 1 #'projectile-discover-projects-in-search-path)
+  (run-with-idle-timer 300 1 #'projectile-cleanup-known-projects))
 
 ;;;;; mail
 (set-email-account! "radivoj"
