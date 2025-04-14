@@ -1,2 +1,4 @@
 --smart-case
---no-search-zip
+
+--type-add=hcl:*.hcl
+--type-add=proto:*.proto
