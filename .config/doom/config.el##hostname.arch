@@ -140,7 +140,11 @@
       :desc "Move to pane on left"                    "M-h"     #'evil-window-left
       :desc "Move to pane on down"                    "M-j"     #'evil-window-down
       :desc "Move to pane on up"                      "M-k"     #'evil-window-up
-      :desc "Move to pane on right"                   "M-l"     #'evil-window-right)
+      :desc "Move to pane on right"                   "M-l"     #'evil-window-right
+      :desc "Resize pane to the left"                 "C-M-h"   #'windsize-left
+      :desc "Resize pane to the bottom"               "C-M-j"   #'windsize-down
+      :desc "Resize pane to the top"                  "C-M-k"   #'windsize-up
+      :desc "Resize pane to the right"                "C-M-l"   #'windsize-right)
 
 
 (add-to-list '+lookup-provider-url-alist
