@@ -20,22 +20,10 @@ set searchurls.github https://github.com/search?utf8=✓&q=
 set searchurls.gh https://github.com/search?utf8=✓&q=
 set searchurls.mdn https://developer.mozilla.org/en-US/search?q=
 set searchurls.dd https://app.datadoghq.eu/logs?query=(source:gcp.k8s.cluster%20project_id:infra-processing-dev)%20OR%20(service:relex-promo-workflows%20env:eu-prod)%20
-set searchurls.googlelucky https://www.google.com/search?btnI=I'm+Feeling+Lucky&q=
-set searchurls.scholar https://scholar.google.com/scholar?q=
-set searchurls.googleuk https://www.google.co.uk/search?q=
-set searchurls.bing https://www.bing.com/search?q=
-set searchurls.yahoo https://search.yahoo.com/search?p=
-set searchurls.twitter https://twitter.com/search?q=
-set searchurls.wikipedia https://en.wikipedia.org/wiki/Special:Search/
 set searchurls.amazon https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=
-set searchurls.amazonuk https://www.amazon.co.uk/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=
 set searchurls.startpage https://startpage.com/do/search?language=english&cat=web&query=
-set searchurls.searx https://searx.me/?category_general=on&q=
-set searchurls.cnrtl http://www.cnrtl.fr/lexicographie/
 set searchurls.osm https://www.openstreetmap.org/search?query=
-set searchurls.gentoo_wiki https://wiki.gentoo.org/index.php?title=Special%3ASearch&profile=default&fulltext=Search&search=
-set searchurls.qwant https://www.qwant.com/?q=
-set searchurls.argo https://argocd.promo.relexsolutions.com//applications/argocd/
+set searchurls.argo https://argocd.promo.relexsolutions.com/applications/?showFavorites=false&proj=&sync=&autoSync=&health=&namespace=&cluster=&labels=&search=
 set searchurls.cf https://relexsolutions.atlassian.net/wiki/search?spaces=FOR&text=
 set searchurls.jira https://relexsolutions.atlassian.net/issues/?jql=project%20%3D%20RP%20AND%20text%20~%20%22%s%22
 set editorcmd alacritty --class alacritty-float -e zsh -c "emacsclient --reuse-frame -nw %f"
@@ -199,6 +187,9 @@ bind zI zoom 3
 bind zO zoom 0.3
 bind . repeat
 bind m gobble 1 markadd
+bindurl https://keep.google.com/ f hint -J
+bindurl https://git.radivoj.se/ f hint -J
+bindurl https://git.radivoj.se/ F hint -Jb
 bindurl https://github.com/.*/.*/blob f hint -c .react-line-number,div
 bindurl ^https://github.com gi hint -Vc .AppHeader-searchButton
 bind ;u hint -F e => e.dispatchEvent(new MouseEvent('mouseover', {}))
@@ -240,8 +231,6 @@ seturl www.google.com followpagepatterns.next Next
 seturl www.google.com followpagepatterns.prev Previous
 seturl https://.*.console.aws.amazon.com/.* allowautofocus true
 seturl https://.*.console.aws.amazon.com/.* preventautofocusjackhammer true
-seturl lastpass.com preventautofocusjackhammer false
-seturl lastpass.com allowautofocus false
 
 " Aliases
 alias tabpush_and_focus jsb void async function(){const tab=await activeTab();const tabId=tab.id;const oldWindowId=tab.windowId;fillcmdline("tabpush");await new Promise(ok=>{browser.tabs.onActivated.addListener(function leftCurrentTab(event){browser.tabs.onActivated.removeListener(leftCurrentTab);ok()})});const tabNow=await browser.tabs.get(tabId);if(tabNow.windowId==oldWindowId)return;browser.tabs.update(tabId,{active:true});browser.windows.update(tabNow.windowId,{focused:true})}();
