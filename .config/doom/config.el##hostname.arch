@@ -116,6 +116,9 @@
       (:prefix-map ("c" . "code")
        :desc "Avy lens"    "A"   #'lsp-avy-lens)
 
+      :prefix "s"
+      :desc "Yank symbol path" "y" #'my-consult-imenu-copy
+
       :prefix "o"
       :desc "Kubedoc" "k" #'kubedoc
       :desc "Kubedoc for context" "K" #'kubedoc-for-context
@@ -584,5 +587,12 @@
                         '(("BAZELISK_SKIP_WRAPPER" . "1")))
       :server-id 'starpls))))
 
-;; (setq company-minimum-prefix-length 1
-;;       company-idle-delay 0.0) ;; default is 0.2
+(defun my-consult-imenu-copy ()
+  "Use `consult-imenu` and copy the selected entry to clipboard, replacing spaces with slashes and ensuring a leading slash."
+  (interactive)
+  (let* ((selection (consult--read (consult-imenu--items) :prompt "Imenu: "))
+         (formatted (concat "/" (replace-regexp-in-string " " "/" selection)))) ;; Ensure leading slash and replace spaces
+    (kill-new formatted)
+    (message "Copied: %s" formatted)))
+
+(load! "windsize.el")
