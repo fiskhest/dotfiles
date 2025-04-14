@@ -103,6 +103,11 @@
  :n "C-+" #'text-scale-increase
  :n "C--" #'text-scale-decrease)
 
+(map!
+ :leader
+ :prefix "g o"
+ :desc "Browse file or region" "o" #'git-link-dispatch)
+
 (map! :leader
       :desc "Search in project"                       "/"       #'+default/search-project
       :desc "Doom dashboard"                          "b h"     #'+doom-dashboard/open
