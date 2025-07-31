@@ -424,8 +424,14 @@ bind-key = select-layout main-vertical
 set -g @thumbs-key F
 set -g @thumbs-alphabet qwertz-homerow
 set -g @thumbs-unique enabled
-set -g @thumbs-command 'tmux set-buffer -- {} && echo -n {} | xclip -in -selection clipboard && tmux display-message \"Copied {}\"'
-# set -g @thumbs-position left
+#set -g @thumbs-command 'tmux set-buffer -- {} && echo -n {} | xclip -in -selection clipboard && tmux display-message \"Copied {}\"'
+#set -g @thumbs-command 'tmux set-buffer -- {} && echo -n {} | wl-copy  && tmux display-message \"Copied {}\"'
+#set -g @thumbs-command 'tmux set-buffer -- {} && tmux display-message \"Copied {}\"'
+set -g @thumbs-command 'echo -n {} | wl-copy'
+set -g @thumbs-regexp-1 '[a-z0-9]+-[^ ]+'
+#set -g @thumbs-regexp-2 "(?:^|[^\\\\])(\"(?:\\\\\"|[^\"\n])*[^\\\\\n]\"|'(?:\\\\'|[^'\n])*[^\\\\\n]'|`(?:\\\\`|[^`\n])*[^\\\\\n]`)"
+#set -g @thumbs-regexp-3 '[\w-\.]+@([\w-]+\.)+[\w-]{2,4}' # Match emails
+set -g @thumbs-position off_left
 
 unbind Space
 bind-key Space next-layout
@@ -441,7 +447,6 @@ run -b 'tmux bind -t vi-copy H top-line 2> /dev/null || true'
 run -b 'tmux bind -T copy-mode-vi H send -X top-line 2> /dev/null || true'
 run -b 'tmux bind -t vi-copy L bottom-line 2> /dev/null || true'
 run -b 'tmux bind -T copy-mode-vi L send -X bottom-line 2> /dev/null || true'
-
 
 
 # -- tpm -----------------------------------------------------------------------
@@ -520,6 +525,10 @@ set -g @fzf-url-bind 'y'
 # }
 
 # run-shell "~/.tmux/plugins/nord-tmux/nord.tmux
+
+# and fix the yanking in copy buffer
+bind-key -T copy-mode-vi y send-keys -X copy-pipe 'wl-copy' #!important
+bind-key -T copy-mode y send-keys -X copy-pipe 'wl-copy' #!important
 
 # -- custom variables ----------------------------------------------------------
 

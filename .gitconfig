@@ -51,3 +51,5 @@
 	helper = cache --timeout=1800
 [maintenance]
 	repo = /home/johan/git/formulatehq/ingest
+[github]
+	user = fiskhest

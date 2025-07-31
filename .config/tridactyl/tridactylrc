@@ -18,6 +18,7 @@ set searchurls.youtube https://www.youtube.com/results?search_query=
 set searchurls.utube https://www.youtube.com/results?search_query=
 set searchurls.github https://github.com/search?utf8=✓&q=
 set searchurls.gh https://github.com/search?utf8=✓&q=
+set searchurls.ghf https://github.com/search?q=org:formulatehq+
 set searchurls.mdn https://developer.mozilla.org/en-US/search?q=
 set searchurls.dd https://app.datadoghq.eu/logs?query=(source:gcp.k8s.cluster%20project_id:infra-processing-dev)%20OR%20(service:relex-promo-workflows%20env:eu-prod)%20
 set searchurls.amazon https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=

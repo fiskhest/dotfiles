@@ -13,7 +13,7 @@ monitor=DP-3,preferred,auto,1
 # monitor=DP-2,preferred,auto,1, mirror, eDP-1
 monitor=DP-2,preferred,auto,1
 # monitor=eDP-1,preferred,auto,1
-monitor=eDP-1,preferred,auto,1, bitdepth, 10
+monitor=eDP-1,preferred,auto,1, bitdepth, 8
 monitor=,preferred,auto,auto
 
 # See https://wiki.hyprland.org/Configuring/Keywords/ for more
@@ -40,7 +40,7 @@ env = MOZ_ENABLE_WAYLAND,1
 env = XDG_CURRENT_DESKTOP,Hyprland
 env = XDG_SESSION_DESKTOP,Hyprland
 env = XDG_SESSION_TYPE,wayland
-env = PATH,/nix/var/nix/profiles/default/bin:/home/johan/.nix-profile/bin:/home/johan/.local/bin:/home/johan/.emacs.d/bin:/home/johan/go/bin:/opt/google-cloud-cli/bin:$PATH
+env = PATH,/nix/var/nix/profiles/default/bin:/home/johan/.nix-profile/bin:/home/johan/.local/bin:/home/johan/.emacs.d/bin:/home/johan/.krew/bin:/home/johan/go/bin:/opt/google-cloud-cli/bin:$PATH
 
 # fix tmux hyprland instance environment variables
 exec-once = source /home/johan/.config/user-dirs.dir
@@ -57,8 +57,8 @@ exec-once = hyprpm reload -n
 exec-once = gsettings set org.gnome.desktop.interface cursor-theme 'Qogir'
 exec-once = kanshi
 exec-once = wl-paste --watch cliphist store
-exec-once = $scripts/clipsync
-# exec-once = wl-clip-persist --clipboard both
+# exec-once = $scripts/clipsync
+exec-once = wl-clip-persist --clipboard both
 exec-once = hypridle
 exec-once = hyprpaper
 exec-once = emailproxy --no-gui --external-auth --config ~/.config/emailproxy.config --log-file /tmp/emailproxy.log
@@ -66,16 +66,25 @@ exec-once = emailproxy --no-gui --external-auth --config ~/.config/emailproxy.co
 # tray
 exec-once = kdeconnect-indicator
 exec-once = nm-applet
- 
+
+#
 # autostart of apps
+
+workspace = 2,on-created-empty:firefox
+# this works but only launches slack once magic workspace is first accessed, inducing a lot of latency once you want it...
+# workspace = special:magic,on-created-empty:libcamerify slack # & sleep 5 && hyprctl dispatch togglespecialworkspace magic
+
 exec-once = emacs --bg-daemon
-exec-once = [workspace 8 silent;noanim] slack
-exec-once = [workspace 2 silent;noanim] term-launcher
-exec-once = [workspace 4 silent;noanim] emacsclient -c -e "(doom/quickload-session t)"
-exec-once = [workspace 3] firefox
-exec-once = [workspace 7 silent;noanim] discord && sleep 5
-exec-once = hyprctl dispatch workspace 1
+# exec-once = [workspace 2 silent;noanim] firefox & sleep 5
+exec-once = [workspace 1 silent;noanim] sleep 2 && term-launcher
+exec-once = [workspace 4 silent;noanim] sleep 10 && emacsclient -c -e "(doom/quickload-session t)" > /tmp/emacsclient.debug.log
+exec-once = sleep 15 && libcamerify gtk-launch slack # & sleep 15 && hyprctl dispatch togglespecialworkspace magic
+exec-once = [workspace 8 silent;noanim] gtk-launch discord # & sleep 10 && hyprctl dispatch workspace 1
+exec-once = sleep 20 && hyprctl dispatch workspace 1
 exec-once = systemctl --user restart hyprland-autoname-workspaces
+exec-once = $scripts/raise-window-for-fullscreen.py
+
+# or, we can define the workspace instead, and then say what should start if it is empty:
 
 # fix kanshi
 exec = kanshictl reload
@@ -119,11 +128,13 @@ general {
 
 }
 
+
+
 decoration {
     # See https://wiki.hyprland.org/Configuring/Variables/ for more
 
     rounding = 3
-    
+
     blur {
         enabled = true
         size = 3
@@ -156,6 +167,7 @@ dwindle {
     pseudotile = yes # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
     preserve_split = yes # you probably want this
     force_split = 2
+    special_scale_factor = 0.995
 }
 
 binds {
@@ -202,8 +214,8 @@ device {
 
 # Example windowrule v1
 # windowrule = float, ^(kitty)$
-windowrule = float, zathura|viewnior
-windowrule = float, nm-connection-editor|pavucontrol|blueman-manager
+windowrulev2 = float, class:^(zathura|viewnior)$
+windowrulev2 = float, class:^(nm-connection-editor|org.pulseaudio.pavucontrol|com.saivert.pwvucontrol|blueman-manager)$
 
 workspace = w[t1], gapsout:8, gapsin:4
 workspace = w[tg1], gapsout:8, gapsin:4
@@ -223,6 +235,9 @@ windowrulev2 = noinitialfocus, class:(discord|KDE Connect|deadd-notification-cen
 windowrulev2 = bordercolor rgb(040303), fullscreen:1
 windowrulev2 = float, class:^(org.kde.kdeconnect.*)$
 windowrulev2 = workspace 6 silent, class:^(Spotify)$
+windowrulev2 = workspace 8 silent, class:[Dd]iscord$
+windowrulev2 = workspace special:magic silent, class:[Ss]lack$
+windowrulev2 = bordercolor rgb(f5e2c4), onworkspace:special:magic
 
 # Common modals
 windowrulev2 = float,title:^(Confirm to replace files)
@@ -236,6 +251,14 @@ windowrulev2 = noanim,class:^(xwaylandvideobridge)$
 windowrulev2 = noinitialfocus,class:^(xwaylandvideobridge)$
 windowrulev2 = maxsize 1 1,class:^(xwaylandvideobridge)$
 windowrulev2 = noblur,class:^(xwaylandvideobridge)$
+
+# Dont show gaps when there is only one window on workspace
+workspace = w[tv1], gapsout:0, gapsin:0
+workspace = f[1], gapsout:0, gapsin:0
+windowrulev2 = bordersize 0, floating:0, onworkspace:w[tv1]
+windowrulev2 = rounding 0, floating:0, onworkspace:w[tv1]
+windowrulev2 = bordersize 0, floating:0, onworkspace:f[1]
+windowrulev2 = rounding 0, floating:0, onworkspace:f[1]
 
 # See https://wiki.hyprland.org/Configuring/Keywords/ for more
 $mainMod = SUPER
@@ -269,7 +292,7 @@ submap = reset
 bind = $mainMod, Return, exec, $terminal
 bind = $mainMod SHIFT, Return, exec, $scripts/term-launcher -f
 bind = $mainMod, Escape, killactive,
-bind = ALT, F4, killactive, 
+bind = ALT, F4, killactive,
 bind = $mainMod, M, exec, $terminal -e zsh -c "TERM=xterm-24 emacsclient --create-frame -nw ~/.config/hypr/hyprland.conf"
 bind = $mainMod SHIFT, M, exec, $fuzzel || $scripts/fuzzel-config-edit
 bind = $mainMod, D, exec, $fileManager
@@ -290,7 +313,7 @@ bind = $mainMod SHIFT, C, exec, $fuzzel || $scripts/fuzzel-pass-user
 bind = $mainMod, V, exec, $fuzzel || $scripts/fuzzel-pass
 bind = $mainMod SHIFT, V, exec, $fuzzel || $scripts/fuzzel-2fa-pass
 bind = $mainMod, N, exec, $rofi || $scripts/nmd
-bind = $mainMod, plus, exec, swaylock --fingerprint
+bind = $mainMod, plus, exec, hyprlock
 bind = $mainMod, F, fullscreen, 1
 bind = $mainMod SHIFT, F, fullscreen, 0
 bind = $mainMod, comma, exec, $fuzzel || $scripts/fuzzel-powermenu
@@ -316,7 +339,7 @@ bind = CTRL SHIFT ALT, TAB, exec, hyprswitch simple --filter-same-class --revers
 
 # Notification controls
 bind = $mainMod, BackSpace, exec, dunstctl close-all
-bind = $mainMod SHIFT, BackSpace, exec, dunstctl history-pop
+bind = $mainMod CTRL, BackSpace, exec, dunstctl history-pop
 bind = $mainMod, period, exec, dunstctl set-paused toggle | notify-send "Notifications paused: $(dunstctl is-paused)"
 
 # Inc/Decrease Brightness

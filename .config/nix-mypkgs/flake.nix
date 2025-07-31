@@ -1,13 +1,26 @@
 {
-  inputs = { nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable"; };
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    renovatePkgs.url = "github:NixOS/nixpkgs/d806a8e152f683fe3e40a16e8e288d4db52e19dd";
+    hyprswitch.url = "github:H3rmt/hyprswitch";
+  };
 
-  outputs = { self, nixpkgs }: {
+  outputs = { self, nixpkgs, renovatePkgs, hyprswitch }: {
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
     packages."x86_64-linux".default =
-      let pkgs = import nixpkgs { system = "x86_64-linux"; config.allowUnfree = true; };
+      let
+        pkgs = import nixpkgs { system = "x86_64-linux"; config.allowUnfree = true; };
+        renovatePkgsLocal = renovatePkgs.legacyPackages.x86_64-linux;
 
       fonts = {
-        packages = builtins.filter pkgs.lib.isDerivation (builtins.attrValues pkgs.nerd-fonts);
+        packages = with pkgs; [
+          nerd-fonts.fira-code
+          nerd-fonts.hack
+          nerd-fonts.jetbrains-mono
+          nerd-fonts.iosevka
+          source-code-pro
+          font-awesome_5
+        ];
       };
       in pkgs.buildEnv {
         name = "home-packages";
@@ -15,95 +28,103 @@
           act
           actionlint
           aichat
+          argocd
+          (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
           bat
-          buildifier
+          bazelisk
           btop
+          buildifier
           cliphist
           clipse
-          fzf
+          cmctl
           difftastic
-          gh
-          gron
-          fd
-          lsd
-          argocd
-          hclfmt
-          jq
-          kubectx
-          kubecolor
-          yamllint
-          kustomize
-          eza
-          libreoffice
-          ldns
-          tig
-          direnv
-          hyperfine
-          fonts.packages
-          nnn
-          material-icons
-          mdl
-          hyprland-autoname-workspaces
-          hyprswitch.packages.x86_64-linux.default
-          jira-cli-go
-          pass
-          postgresql_16
           dust
-          bazelisk
-          fasd
-          fuzzel
-          thefuck
           emacs-lsp-booster
           #emacs
           #emacsPackages.mu4e
-          cmctl
-          shfmt
-          shellcheck
+          eza
+          fasd
+          fd
+          fonts.packages
+          fuzzel
+          fzf
+          gh
+          git-absorb
           go-2fa
-          gojq
-          yadm
-          gopass
-          gopls
           godef
           gofumpt
-          isync
+          gojq
+          gopass
+          gopls
+          gron
+          hclfmt
           helmfile
           hey
+          hyperfine
+          hyprland-autoname-workspaces
+          hyprswitch.packages.x86_64-linux.default
           istioctl
+          isync
+          jira-cli-go
+          jq
           k9s
           kail
           kind
           krew
-          pyenv
+          kubecolor
+          kubectx
           kubernetes-helm
+          kubeseal
+          kustomize
+          ldns  # drill
+          libreoffice
+          lnav
+          lsd
+          material-icons
+          mdl
+          netmask
           nix-zsh-completions
+          nnn
           nodePackages.prettier
           nodePackages.stylelint
           nodePackages.typescript-language-server
-          # rofi-network-manager.packages.x86_64-linux.default
-          rustup
-          starship
-          starpls-bin
-          tf-summarize
-          tenv
-          tree-sitter
-          trivy
           pandoc
+          pass
+          postgresql_16
+          pwvucontrol
+          pyenv
+          renovatePkgsLocal.renovate
+          # renovate  # replace above as soon as https://github.com/nixos/nixpkgs/issues/425474 is fixed
+          rustup
+          shellcheck
+          shfmt
+          sipcalc
+          skim
+          starpls-bin
+          starship
+          temporal-cli
+          tenv
+          terraform-ls
+          tf-summarize
           tfautomv
           tflint
           tfswitch
-          terraform-ls
-          tmux-sessionizer
+          pay-respects
+          tig
           tmux
+          tmux-sessionizer
           tmuxPlugins.extrakto
+          tree-sitter
+          trivy
           typescript
           vscode-langservers-extracted
+          yadm
           yaml-language-server
+          yamllint
           yq-go
-          wtf
-          (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
+          wtfutil
         ];
-        pathsToLink = [ "/bin" "/share" ];
+        pathsToLink = [ "/bin" "/share" "/share/fonts" ];
         extraOutputsToInstall = [ "man" "doc" ];
       };
     };

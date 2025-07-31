@@ -65,38 +65,6 @@ statuspanel[type="overLink"],
   display: none !important;
 }
 
-/* ---- disabled things ---- */
-
-/*
-[uidensity="compact"]:root #nav-bar {
-    margin-top: -32px;
-}
-*/
-
-/** {font-size: 40px !important;}*/
-
-/* Sidebery */
-
-/*#sidebar-header {
-  display: none;
-}
-
-#TabsToolbar {
-      display: none;
-}*/
-
-/*
-:root {
-    --titlebar-padding-x: 10px;
-    --titlebar-padding-y: 0px;
-    --titlebar-height: 30px;
-    --navbar-margin-top: -25px;
-    --navbar-margin-right: 110px
-
-*/
-
-/*#tabbrowser-tabs, #navigator-toolbox, menuitem, menu {*/
-
 #nav-bar {
   /* customize this value. */
   --navbar-margin: -44px;

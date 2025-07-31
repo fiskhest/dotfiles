@@ -54,16 +54,19 @@
 
 (package! git-link)
 
-;; try and enable this through init.el instead
-(package! mu4e)
+;; is this actually already taken care of by init.el mu4e?
+;; try commenting and verifying if everything still works as expected
 (package! evil-mu4e)
 
 (package! oauth2)
 
-;; https://github.com/Wilfred/deadgrep 
+;; https://github.com/Wilfred/deadgrep
 (package! deadgrep)
 
 (package! kubernetes)
 (package! kubernetes-evil)
 
 (package! bazel)
+
+(package! forge)
+(package! code-review)

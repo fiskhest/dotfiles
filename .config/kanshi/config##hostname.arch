@@ -9,6 +9,15 @@ profile {
 
 profile {
         output eDP-1 disable
+        output "BNQ BenQ PD3205U B5N01002019" mode 3840x2160@60Hz position 0,0 enable scale 1.0
+        exec hyprctl keyword general:gaps_in  4
+        exec hyprctl keyword general:gaps_out 12
+        exec launch-waybar
+        exec ln -sf ~/.config/swaylock/config.stationary ~/.config/swaylock/config
+}
+
+profile {
+        output eDP-1 disable
         output DP-3 position 0,0 enable scale 1.0
         exec hyprctl keyword general:gaps_in  4
         exec hyprctl keyword general:gaps_out 12
@@ -78,4 +87,3 @@ profile {
         exec launch-waybar
         exec ln -sf ~/.config/swaylock/config.stationary ~/.config/swaylock/config
 }
-

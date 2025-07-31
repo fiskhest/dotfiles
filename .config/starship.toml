@@ -1,3 +1,4 @@
+"$schema" = 'https://starship.rs/config-schema.json'
 command_timeout = 1000
 format = """
 [](fg:bright-blue bg:#2e3440)\
@@ -5,15 +6,16 @@ $directory\
 $git_branch\
 $git_status\
 $fill\
+${custom.vpn}\
 $cmd_duration\
-$terraform\
 ${custom.direnv}\
 $golang\
 $line_break\
 $character\
-${custom.vpn}\
 """
 
+
+# $terraform\
 # $time\
 # $python\
 #[](fg:#3a3a3a bg:#2e3440)\
@@ -65,6 +67,8 @@ format = '[](fg:#2E3440 bg:bright-black)[[$symbol $branch](bg:bright-black)](
 style = "bg:#81A1C1"
 format = '[[($all_status$ahead_behind )](bg:bright-black)]($style)[](fg:bright-black bg:#2E3440)[](fg:#2E3440 bg:dim-black)'
 
+[gcloud]
+disabled = true
 #[](bg:#5e81ac fg:#2e3440)
 #[nodejs]
 #symbol = ""
@@ -92,7 +96,7 @@ format = '[](fg:#33658A bg:#2E3440)[🕙$time ]($style)'
 
 [terraform]
 #format = '[](fg:#86BBD8)[«${symbol}${version}»]($style)'
-format = "[](fg:bright-black bg:#2E3440)[💠$version/$workspace]($style)[](fg:#2E3440 bg:bright-black)"
+format = "[](fg:bright-black bg:#2E3440)[💠$version]($style)[](fg:#2E3440 bg:bright-black)"
 version_format = "v${raw}"
 style = "bg:bright-black"
 
@@ -111,6 +115,9 @@ pyenv_version_name = false
 version_format = "${raw}"
 # format = '[${symbol}($virtualenv)]($style)'
 format = '[](fg:#86BBD8)[ ${pyenv_prefix}(${virtualenv} )(«$version» ${symbol})]($style)'
+
+[kubernetes]
+disabled = true
 
 [package]
 format = '[🎁 $version](208 bold) '

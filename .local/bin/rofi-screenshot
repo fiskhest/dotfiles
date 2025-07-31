@@ -67,19 +67,19 @@ fi
 # Capture image
 case "$src" in
     region)
-        grimblast --wait $delay copysave area | notify_view
+        grimblast copysave area --wait $delay | notify_view
         ;;
     screen)
         sleep 0.1
-        grimblast --wait $delay copysave output | notify_view
+        grimblast copysave output --wait $delay | notify_view
         ;;
     window)
         sleep 0.1
-        grimblast --wait $delay copysave active | notify_view
+        grimblast copysave active --wait $delay | notify_view
         ;;
     monitors)
         sleep 0.1
-        grimblast --wait $delay copysave screen | notify_view
+        grimblast copysave screen --wait $delay | notify_view
         ;;
 esac
 

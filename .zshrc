@@ -84,24 +84,14 @@ export NVM_COMPLETION=true
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-vim-mode zsh-vimode-visual virtualenv kubectl sudo fzf fzf-zsh-plugin fzf-tab zsh-autosuggestions zsh-syntax-highlighting zsh-nvm evalcache)
+plugins=(git zsh-vim-mode zsh-vimode-visual virtualenv kubectl sudo fzf fzf-tab zsh-autosuggestions zsh-syntax-highlighting zsh-nvm evalcache)
+# fzf fzf-zsh-plugin fzf-tab
 # plugins=(git fzf zsh-autosuggestions zsh-syntax-highlighting virtualenv kubectl sudo zsh-vim-mode zsh-vimode-visual)
-# tmux tmuxinator ssh-agent vi-mode fzf-zsh-plugin 
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
 test -r ~/.dir_colors && eval $(dircolors ~/.dir_colors)
-
-# if I ever get around to wanting to replace zsh-vim-mode with zsh-vi-mode, following will be needed
-# zvm_after_init_commands+=('[ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh && [ -f /usr/share/fzf/completions.zsh  ] && source /usr/share/fzf/completions.zsh')
-# 
-# function zvm_config () {
-#     ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
-#     ZVM_ESCAPE_KEYTIMEOUT=0.01
-# }
-#source /usr/share/fzf/key-bindings.zsh
-#source /usr/share/fzf/completion.zsh
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -167,6 +157,7 @@ alias pc="pass -c"
 alias 2fac="2fa -clip"
 alias scratch="cd ~/scratch"
 alias code="codium"
+alias fuck="f"
 
 alias v='f -e "$EDITOR"'
 alias o='a -e xdg-open'
@@ -175,9 +166,12 @@ alias dir='pwd | tee >(clipcopy)'
 alias ccp='clipcopy'
 alias cin='clipcopy'
 alias cout='clippaste'
+alias diffin='wl-paste | git apply'
+alias diffout='git diff | clipcopy'
 
 alias bazel='bazelisk'
-alias vi='TERM=xterm-24 emacsclient -nw'
+alias bzl='bazelisk'
+alias vi='emacsclient -nw'
 
 alias diff='diff --color=auto'
 alias grep='grep --color=auto'
@@ -204,7 +198,7 @@ function gcmr() {
 }
 
 # k8s
-alias k="kubectl"
+alias k="kubecolor"
 alias kctx="kubectx"
 alias kns="kubens"
 alias tf="tofu"
@@ -212,14 +206,13 @@ alias pitt="pop infra tf-targets"
 
 # misc
 alias gmv="go mod vendor"
-alias magit='TERM=xterm-24 emacsclient -nw -a emacs -e "(magit-status \"$(git rev-parse --show-toplevel)\")"'
+alias magit='emacsclient -nw -a emacs -e "(magit-status \"$(git rev-parse --show-toplevel)\")"'
 alias pass="gopass"
 
 # vi mode
 export KEYTIMEOUT=1
 
 # vi binds in input mode
-# bindkey '^r' fzf-history-widget
 # bindkey '^n' ranger
 bindkey '^d' delete-char
 bindkey '^[^?' backward-kill-word
@@ -238,7 +231,6 @@ bindkey '$key[Down]' down-line-or-beginning-search
 #bindkey '^q' beginning-of-line
 
 # vi binds in normal mode
-#bindkey -a '^r' fzf-history-widget
 bindkey -a '^[^?' backward-kill-word
 bindkey -a '_' beginning-of-line
 bindkey -a '^q' beginning-of-line
@@ -312,17 +304,17 @@ function n
 function tfsum() {
   echo "Starting tf summary... Please wait"
   # If you want to print full plan output: tofu plan $1 -out plan.tfplan
-  tofu plan "$1" -out plan.tfplan 1> /dev/null
-  tofu show -json plan.tfplan | tftools summarize --show-tags
+  tofu plan "$@" -out plan.tfplan 1> /dev/null
   # Delete plan out file to avoid git tracking (although is included in .gitignore)
-  if [ -f "plan.tfplan" ]; then rm plan.tfplan; fi
+  if [ -f "plan.tfplan" ]; then
+    tofu show -json plan.tfplan | tftools summarize --show-tags
+    rm plan.tfplan;
+  fi
 }
 
 
-# these were enabled before !!
 _evalcache direnv hook zsh
 _evalcache starship init zsh
-_evalcache thefuck --alias
 _evalcache fasd --init auto
 
 # must come after fasd
@@ -363,6 +355,8 @@ export DIRENV_LOG_FORMAT=
 
 export TERRAGRUNT_NO_AUTO_APPROVE=true
 
+export SEALED_SECRETS_CONTROLLER_NAMESPACE=sealed-secrets
+
 # source ~/.config/environment.d/40-user.conf
 
 # hyprctl in tmux needs special care to re-evaluate the env SOCK address
@@ -382,8 +376,8 @@ source '/home/johan/.local/share/pop/shell_init/zsh/init.zsh' # added by pop
 source '/home/johan/.config/zsh-secrets/env-vars'
 export POP_PR_ASSIGNEE="fiskhest"
 
-TF_CLI_ARGS_plan="-parallelism=50"
-TF_CLI_ARGS_apply="-parallelism=50"
+export TF_CLI_ARGS_plan="-parallelism=50"
+export TF_CLI_ARGS_apply="-parallelism=50"
 
 source '/home/johan/._argocd'
 
@@ -391,3 +385,13 @@ source '/home/johan/._argocd'
 autoload -U +X bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
 
+
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh --disable-up-arrow)"
+eval "$(pay-respects zsh)"
+
+# Make "kubecolor" borrow the same completion logic as "kubectl"
+compdef kubecolor=kubectl
+
+export INGEST_HOME="$HOME/git/formulatehq/ingest"

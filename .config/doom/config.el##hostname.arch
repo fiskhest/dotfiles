@@ -98,10 +98,9 @@
   :v "V" #'er/contract-region))
 
 (map!
- :n "C-0" #'doom/reset-font-size
  :n "C-=" #'doom/reset-font-size
- :n "C-+" #'text-scale-increase
- :n "C--" #'text-scale-decrease)
+ :n "C-+" #'doom/increase-font-size
+ :n "C--" #'doom/decrease-font-size)
 
 (map!
  :leader
@@ -146,13 +145,54 @@
       :desc "Resize pane to the top"                  "C-M-k"   #'windsize-up
       :desc "Resize pane to the right"                "C-M-l"   #'windsize-right)
 
+(after! markdown-mode
+  ;; Override the evil bindings directly
+  (evil-define-key 'normal evil-markdown-mode-map
+    (kbd "M-h") #'evil-window-left
+    (kbd "M-j") #'evil-window-down
+    (kbd "M-k") #'evil-window-up
+    (kbd "M-l") #'evil-window-right)
+
+  (evil-define-key 'visual evil-markdown-mode-map
+    (kbd "M-h") #'evil-window-left
+    (kbd "M-j") #'evil-window-down
+    (kbd "M-k") #'evil-window-up
+    (kbd "M-l") #'evil-window-right))
+
+(after! markdown-mode
+  (map! :mode gfm-mode
+        :n "C-M-h" :desc "Markdown promote" #'markdown-promote
+        :n "C-M-j" :desc "Markdown move down" #'markdown-move-down
+        :n "C-M-k" :desc "Markdown move up" #'markdown-move-up
+        :n "C-M-l" :desc "Markdown demote" #'markdown-demote))
 
 (add-to-list '+lookup-provider-url-alist
              '("Melpa"       "https://melpa.org/#/?q=%s")
              '("go.dev"      "https://pkg.go.dev/search?q=%s"))
 
 
-;;;; use-package section
+;;(transient-append-suffix 'magit-commit '(1 3 -1) '("b" "git-absorb" magit-commit-absorb))
+(magit-wip-mode)
+
+;; Don't use lsp-formatting for Bazel files.
+;; It's not working for some reason.
+(defun radivoj/+format-with-lsp-toggle-h (orig-fun &rest args)
+  ""
+  (unless (derived-mode-p 'bazel-mode)
+    (apply orig-fun args)))
+
+(advice-add '+format-with-lsp-toggle-h :around #'radivoj/+format-with-lsp-toggle-h)
+
+;;;; packages section
+
+(use-package! doom-modeline
+  :config
+  (setq doom-modeline-persp-name t))
+
+;; gitea currently not supported
+;; (use-package! browse-at-remote
+;;   :config
+;;   (add-to-list 'browse-at-remote-remote-type-regexps '("^git\\.radivoj\\.se$" . "gitea")))
 
 (use-package! magit
   :config
@@ -181,10 +221,10 @@
 
 
 (set-email-account! "gmail"
-                    '((mu4e-sent-folder       . "/gmail/Sent Mail")
-                      (mu4e-drafts-folder     . "/gmail/Drafts")
-                      (mu4e-trash-folder      . "/gmail/Trash")
-                      (mu4e-refile-folder     . "/gmail/All Mail")
+                    '((mu4e-sent-folder       . "/gmail/[Gmail]/Skickat")
+                      (mu4e-drafts-folder     . "/gmail/[Gmail]/Utkast")
+                      (mu4e-trash-folder      . "/gmail/[Gmail]/Papperskorgen")
+                      (mu4e-refile-folder     . "/gmail/[Gmail]/All e-post")
                       (smtpmail-smtp-user     . "johan.radivoj@gmail.com"))
                     t)
 
@@ -197,8 +237,7 @@
                     t)
 
 
-(use-package! mu4e
-  ;; :load-path "/usr/share/emacs/site-lisp/mu4e/"
+(after! mu4e
   :ensure nil
   :defer 1
   :demand t
@@ -207,7 +246,7 @@
         mu4e-get-mail-command "mbsync --all"
         mu4e-update-interval 300
         message-signature "Johan Radivoj"
-        mu4e-completing-read-function 'ivy-completing-read
+        ;; mu4e-completing-read-function 'ivy-completing-read
         mu4e-confirm-quit nil
         mu4e-headers-date-format "%d/%m '%y %H:%M"
         mu4e-headers-fields
@@ -231,7 +270,8 @@
             :leave-func (lambda ()
                           (mu4e-message "Leaving gmail context")
                           (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
-                            (revert-buffer)))
+                            (revert-buffer)
+                            (mu4e-clear-caches)))
             :match-func (lambda (msg)
                           (when msg
                             (or (mu4e-message-contact-field-matches msg :to "johan.radivoj@gmail.com")
@@ -241,9 +281,12 @@
                                 (string-match-p "^/gmail/Inbox" (mu4e-message-field msg :maildir)))))
             :vars '( ( user-mail-address            . "johan.radivoj@gmail.com")
                      ( smtpmail-smtp-user           . "johan.radivoj@gmail.com")
+                                        ;( auth-source-debug . t)  ; enable auth debugging
                      ( mu4e-compose-signature       . "Johan Radivoj")
                      ( smtpmail-smtp-server         . "smtp.gmail.com")
                      ( smtpmail-smtp-service        . 587)
+                     ( send-mail-function    . 'smtpmail-send-it)         ; should not be modified
+                     ( smtpmail-stream-type . starttls)
                                         ;( mu4e-maildir-shortcuts       . ((:maildir "/gmail/Inbox" :key ?i)))
                      ( mu4e-bookmarks
                        .
@@ -261,7 +304,7 @@
                                 :hide-unread t
                                 :key ?w)
                         ( :name "Deleted"
-                                :query "flag:trashed"
+                                :query "maildir:/gmail/[Gmail]/Papperskorgen"
                                 :key ?d)
                         ( :name "Possibly garbage"
                                 :query "bokio OR outdoorexperten"
@@ -276,7 +319,8 @@
             :leave-func (lambda ()
                           (mu4e-message "Leaving private context")
                           (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
-                            (revert-buffer)))
+                            (revert-buffer)
+                            (mu4e-clear-caches)))
             :match-func (lambda (msg)
                           (when msg
                             (or (mu4e-message-contact-field-matches msg :to "johan@radivoj.se")
@@ -284,17 +328,16 @@
                                 (mu4e-message-contact-field-matches msg :cc "johan@radivoj.se")
                                 (mu4e-message-contact-field-matches msg :bcc "johan@radivoj.se"))))
 
-            :vars '( ( user-mail-address      . "johan@radivoj.se")
-                     ( smtpmail-smtp-user      . "johan@radivoj.se")
-                     ( smtpmail-smtp-server    . "mail.radivoj.se")
-                     ( smtpmail-smtp-service   . 587)
-                     ( smtpmail-stream-type   . nil)
-                     ( send-mail-function . 'smtpmail-send-it)         ; should not be modified
+            :vars '( ( user-mail-address     . "johan@radivoj.se")
+                     ( smtpmail-smtp-user    . "johan@radivoj.se")
+                     ( smtpmail-smtp-server  . "mail.radivoj.se")
+                     ( smtpmail-smtp-service . 465)
+                     ( send-mail-function    . 'smtpmail-send-it)         ; should not be modified
 
-                     ( smtpmail-servers-requiring-authorization . ".*")
-                     ( smtpmail-stream-type 'plain)
+                     ;; ( smtpmail-servers-requiring-authorization . ".*")
+                     ( smtpmail-stream-type . tls)
 
-                     ( auth-sources . '(password-store))
+                     ( auth-sources . (password-store))
                      ( auth-source-debug . t)
                      ( auth-source-do-cache . nil)
                      ( mu4e-compose-signature  . "Johan Radivoj")
@@ -315,7 +358,7 @@
                                 :hide-unread t
                                 :key ?w)
                         ( :name "Deleted"
-                                :query "flag:trashed"
+                                :query "maildir:/radivoj.se/Trash"
                                 :key ?d)))))
 
           ,(make-mu4e-context
@@ -327,7 +370,8 @@
             :leave-func (lambda ()
                           (mu4e-message "Leaving work context")
                           (when (string-match-p (buffer-name (current-buffer)) "mu4e-main")
-                            (revert-buffer)))
+                            (revert-buffer)
+                            (mu4e-clear-caches)))
             :match-func (lambda (msg)
                           (when msg
                             (or (mu4e-message-contact-field-matches msg :to "johan.radivoj@relexsolutions.com")
@@ -336,7 +380,7 @@
                                 (mu4e-message-contact-field-matches msg :bcc "johan.radivoj@relexsolutions.com"))))
 
             :vars '( ( user-mail-address      . "johan.radivoj@relexsolutions.com")
-                     ( smtpmail-smtp-user      . "johan.radivoj@relexsolutions.com")
+                     ( smtpmail-smtp-user     . "johan.radivoj@relexsolutions.com")
                      ( mu4e-compose-signature . "Johan Radivoj\nSite Reliability Engineer\n+46720832028\n")
                      ( mu4e-confirm-quit . nil)
                      ( mu4e-headers-include-related . nil) ;; or P
@@ -346,13 +390,12 @@
                      ;; mu4e-show-threads nil ; Instead use "P" to toggle threading
 
                      ;; SMTP settings:
-                     ( send-mail-function 'smtpmail-send-it)
-                     ( smtpmail-smtp-user "johan.radivoj@relexsolutions.com")
+                     ( send-mail-function . 'smtpmail-send-it)
 
                      ( smtpmail-servers-requiring-authorization . ".*")
                      ( smtpmail-smtp-server . "127.0.0.1")
                      ( smtpmail-smtp-service . 1587)
-                     ( smtpmail-stream-type . 'plain)
+                     ( smtpmail-stream-type . plain)
 
                      ( user-full-name . "Johan Radivoj")
 
@@ -368,16 +411,23 @@
                         ( :name "Todays work messages"
                                 :query "maildir:/relexsolutions.com/Inbox AND date:today..now"
                                 :key ?t)
+                        ( :name "Git flagged: infra"
+                                :query "maildir:/relexsolutions.com/git AND infra"
+                                :key ?f)
+                        ( :name "JIRA"
+                                :query "maildir:/relexsolutions.com/jira"
+                                :key ?j)
                         ( :name "Last 7 days"
                                 :query "maildir:/relexsolutions.com/Inbox AND date:7d..now"
-                                :hide-unread t
                                 :key ?w)
-                        ( :name "Deleted"
-                                :query "flag:trashed"
-                                :key ?d)
                         ( :name "Git"
                                 :query "maildir:/relexsolutions.com/git"
-                                :key ?g))))))))
+                                :hide-unread t
+                                :key ?g)
+                        ( :name "Deleted"
+                                :query "maildir:\"/relexsolutions.com/Deleted Items\""
+                                :hide-unread t
+                                :key ?d))))))))
 
 ;;;; Use gnus article view
 (setq mu4e-view-use-gnus t)
@@ -434,7 +484,7 @@
 (defun +gnus-remove-banner ()
   (save-excursion
     (goto-char (point-min))
-    (while (re-search-forward "This email originated from outside of RELEX. Be careful of attachments and links from unknown senders.\nReport suspicious emails using the report button.\n\n" nil t)
+    (while (re-search-forward "This email originated from outside of RELEX. Be careful of attachments and links from unknown senders.[\s|\n]Report[\s|\n]suspicious emails using the report button.\n\n" nil t)
       (delete-region (point-min) (match-end 0)))))
 
 (add-to-list 'gnus-treatment-function-alist '(+gnus-remove-banner +gnus-remove-banner))
@@ -475,7 +525,7 @@
          ;; make +lookup/documentation write out the entire documentation
          lsp-go-hover-kind "FullDocumentation"
          lsp-disabled-clients '(tfls)
-         lsp-file-watch-threshold 2500
+         lsp-file-watch-threshold 3500
          lsp-semantic-tokens-enable nil
          lsp-semantic-tokens-honor-refresh-requests nil
          lsp-enable-links t
@@ -605,3 +655,9 @@
     (message "Copied: %s" formatted)))
 
 (load! "windsize.el")
+
+(add-hook 'code-review-mode-hook #'emojify-mode)
+(add-hook 'code-review-mode-hook
+          (lambda ()
+            ;; include *Code-Review* buffer into current workspace
+            (persp-add-buffer (current-buffer))))
