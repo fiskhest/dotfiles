@@ -26,7 +26,7 @@ set searchurls.startpage https://startpage.com/do/search?language=english&cat=we
 set searchurls.osm https://www.openstreetmap.org/search?query=
 set searchurls.argo https://argocd.promo.relexsolutions.com/applications/?showFavorites=false&proj=&sync=&autoSync=&health=&namespace=&cluster=&labels=&search=
 set searchurls.cf https://relexsolutions.atlassian.net/wiki/search?spaces=FOR&text=
-set searchurls.jira https://relexsolutions.atlassian.net/issues/?jql=project%20%3D%20RP%20AND%20text%20~%20%22%s%22
+set searchurls.jira https://relexsolutions.atlassian.net/issues/?jql=%28project%20%3D%20RPPI%20OR%20project%20%3D%20RP%29%20AND%20text%20~%20%22%s%22
 set editorcmd alacritty --class alacritty-float -e zsh -c "emacsclient --reuse-frame -nw %f"
 
 " Binds
